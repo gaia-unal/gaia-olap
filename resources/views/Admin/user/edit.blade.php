@@ -15,7 +15,9 @@
 	</div>
 		@include('layouts.partials.errors')
 		{!! Form::model($user, ['route'=> ['Admin.user.update', $user],'method'=> 'PUT', 'class'=> 'form-horizontal']) !!}
-			@include('form.user.editForm',['cancelar' => 'Admin.user.index'])
+		
+			@include('form.user.userForm',['cancelar' => 'Admin.user.index', 'action' => 'update'])
+		
 		{!! Form::close() !!}
 	</div>
 

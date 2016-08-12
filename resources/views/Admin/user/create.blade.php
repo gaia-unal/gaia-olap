@@ -14,12 +14,16 @@
 		</div>
 	</div>
 
+	<div class="box-body">
+
 	    @include('layouts.partials.errors')
 
 		{!! Form::open(['route'=> 'Admin.user.store','method'=> 'POST', 'class'=> 'form-horizontal']) !!}
-			@include('form.user.createForm',['cancelar' => 'Admin.user.index'])
+		
+			@include('form.user.userForm',['cancelar' => 'Admin.user.index', 'action' => 'create'])
+		
 		{!! Form::close() !!}
-
+	</div>
 </div>
 
 @endsection
