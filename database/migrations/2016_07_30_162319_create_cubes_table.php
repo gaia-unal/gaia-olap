@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration
+class CreateCubesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,13 +12,17 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('cubes', function (Blueprint $table) {
+            
             $table->increments('id');
+            $table->integer('connectionId');
             $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->enum('type',['Admin','Creator'])->default('Creator');
-            $table->rememberToken();
+            $table->string('description')->nullable()->default(null);
+
+
+            $table->foreign('connectionId')->references('id')->on('connections')->onDelete('cascade');
+
+
             $table->timestamps();
         });
     }
@@ -30,6 +34,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::drop('users');
+        Schema::drop('cubes');
     }
 }

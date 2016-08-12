@@ -29,7 +29,7 @@ desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
-<body class="skin-blue sidebar-mini">
+<body class="skin-green sidebar-mini">
 <div class="wrapper">
 
     @include('layouts.partials.mainheader')
@@ -44,7 +44,14 @@ desired effect
         <!-- Main content -->
         <section class="content">
             <!-- Your Page Content Here -->
-            @yield('main-content')
+            <div class="container spark-screen">
+                <div class="row">
+                    <div class=" col-md-11">
+                        @yield('main-content')
+                    </div>
+                </div>
+            </div>
+            
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
 

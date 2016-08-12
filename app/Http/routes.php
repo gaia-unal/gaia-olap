@@ -14,3 +14,28 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group(['middleware' => 'auth'], function(){
+	
+	Route::group(['middleware' => 'role:Admin', 'prefix' => 'Admin'], function(){
+		
+		Route::get('/',[
+			'uses' 	=> 'AdminController@index',
+			'as'	=> 'Admin.index'
+		]);
+
+		Route::resource('user','UserController');
+	
+	});
+
+
+	Route::group(['middleware' => 'role:Creator', 'prefix' => 'Creator'], function(){
+		
+		Route::get('/',[
+			'uses' 	=> 'CreatorController@index',
+			'as'	=> 'Creator.index'
+		]);
+	});
+
+});
+
