@@ -3,32 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
-use App\Repositories\UserRepository;
+use App\Repositories\ConnectionRepository;
 
-class UserController extends Controller
+
+class ConnectionController extends Controller
 {
 
-    private $userRepository;
+    private $connectionRepository;
 
-    
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(ConnectionRepository $connectionRepository)
     {
-        $this->userRepository = $userRepository;
+        $this->connectionRepository = $connectionRepository;
     }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    
+
     public function index()
-    { 
-        $users = $this->userRepository->paginateUsers();
+    {
+        $connections = $this->connectionRepository
+                            ->paginateConnections(currentUser()->id);
         
-        return view('Admin.user.index')->with('users', $users);
+        return view('Creator.connection.index')->with('connections',$connections);
     }
 
     /**
@@ -38,7 +38,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('Admin.user.create');
+        return view('Creator.connection.create');
     }
 
     /**
@@ -49,13 +49,13 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $user= $this->userRepository
-                    ->saveUser(
-                        $this->userRepository
+        $user= $this->connectionRepository
+                    ->saveConnection(
+                        $this->connectionRepository
                              ->createObject($request->all())
                         );
 
-        return redirect()->route('Admin.user.index');
+        return redirect()->route('Creator.connection.index');
     }
 
     /**
@@ -66,9 +66,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = $this->userRepository->consultUser($id);
+        $connection = $this->connectionRepository->consultConnection($id);
 
-        return view('Admin.user.show')->with('user',$user);
+        return view('Creator.connection.show')->with('connection',$connection);
     }
 
     /**
@@ -79,11 +79,10 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user= $this->userRepository
-                    ->consultUser($id);
+        $connection= $this->connectionRepository
+                    ->consultConnection($id);
 
-        return view('Admin.user.edit')->with('user', $user);
-
+        return view('Creator.connection.edit')->with('connection', $connection);
     }
 
     /**
@@ -95,13 +94,13 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user= $this->userRepository
-                    ->updateUser(
+        $connection= $this->connectionRepository
+                    ->updateConnection(
                         $request->all(),
                         $id
                     );
 
-        return redirect()->route('Admin.user.index');
+        return redirect()->route('Creator.connection.index');
     }
 
     /**
@@ -112,9 +111,10 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $user= $this->userRepository
+        $connection= $this->connectionRepository
                     ->delete($id);
 
-        return redirect()->route('Admin.user.index');
+        return redirect()->route('Creator.connection.index');
+
     }
 }

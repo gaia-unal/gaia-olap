@@ -31,12 +31,26 @@
 
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
-            <li class="header">{{ trans('adminlte_lang::message.header') }}</li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="{{ url('home') }}"><i class='fa fa-link'></i> <span>{{ trans('adminlte_lang::message.home') }}</span></a></li>
-            <li><a href="#"><i class='fa fa-link'></i> <span>{{ trans('adminlte_lang::message.anotherlink') }}</span></a></li>
+            @if (! Auth::guest())
+
+                @if (currentUser()->type == "Admin")
+                    
+                    <li class="header">Administrador</li>
+                    <li class="active"><a href="{{ route('Admin.index') }}"><i class='fa fa-link'></i> <span>Sección Administrador</span></a></li>
+                    <li><a href="{{ route('Admin.user.index') }}"><i class='fa fa-link'></i> <span>Usuario</span></a></li>
+                @endif
+
+                <li class="header">Creador</li>
+                <li><a href="{{ route('Creator.index') }}"><i class='fa fa-link'></i> <span>Sección Creador</span></a></li>
+                <li><a href="{{ route('Creator.connection.index') }}"><i class='fa fa-link'></i> <span>Conexiones</span></a></li>
+
+            @endif 
+
             <li class="treeview">
-                <a href="#"><i class='fa fa-link'></i> <span>{{ trans('adminlte_lang::message.multilevel') }}</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <a href="#"><i class='fa fa-link'></i> <span>Pagina Publica</span> <i class="fa fa-angle-left pull-right"></i></a>
+
+
                 <ul class="treeview-menu">
                     <li><a href="#">{{ trans('adminlte_lang::message.linklevel2') }}</a></li>
                     <li><a href="#">{{ trans('adminlte_lang::message.linklevel2') }}</a></li>

@@ -35,6 +35,8 @@ Route::group(['middleware' => 'auth'], function(){
 			'uses' 	=> 'CreatorController@index',
 			'as'	=> 'Creator.index'
 		]);
+
+		Route::resource('connection','ConnectionController');
 	});
 
 });
