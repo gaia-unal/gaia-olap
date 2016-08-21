@@ -3,20 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Repositories\UserRepository;
+use App\Validator\UserValidator;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 class UserController extends Controller
 {
 
     private $userRepository;
 
-    
+    protected $validator;
 
-    public function __construct(UserRepository $userRepository)
-    {
+    public function __construct(
+            UserRepository $userRepository, 
+            UserValidator $validator
+        ){
+        
         $this->userRepository = $userRepository;
+        $this->validator = $validator;
     }
     /**
      * Display a listing of the resource.
@@ -26,8 +31,9 @@ class UserController extends Controller
     
     public function index()
     { 
-        $users = $this->userRepository->paginateUsers();
-        
+        $users= $this->userRepository
+                        ->paginate($limit = 10);
+       
         return view('Admin.user.index')->with('users', $users);
     }
 
@@ -49,13 +55,32 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $user= $this->userRepository
-                    ->saveUser(
-                        $this->userRepository
-                             ->createObject($request->all())
-                        );
 
-        return redirect()->route('Admin.user.index');
+        try{
+
+            $this->validator
+                    ->with($request->all())
+                    ->passesOrFail();
+
+            $user= $this->userRepository
+                        ->saveUser($request->all());
+
+            $message= ([
+                'message'=>'Usuario Creado',
+                'data'   =>$user
+            ]);
+
+            return redirect()->route('Admin.user.index')->with('message',$message);
+
+        }catch (ValidatorException $e){
+            
+            $message= ([
+                'error'   =>true,
+                'message' =>$e->getMessage()
+            ]);
+
+            return redirect()->back()->with('message',$message);
+        }
     }
 
     /**
@@ -66,7 +91,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = $this->userRepository->consultUser($id);
+        $user= $this->userRepository
+                    ->find($id);
 
         return view('Admin.user.show')->with('user',$user);
     }
@@ -80,8 +106,8 @@ class UserController extends Controller
     public function edit($id)
     {
         $user= $this->userRepository
-                    ->consultUser($id);
-
+                    ->find($id);
+        
         return view('Admin.user.edit')->with('user', $user);
 
     }
@@ -95,13 +121,34 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user= $this->userRepository
-                    ->updateUser(
-                        $request->all(),
-                        $id
-                    );
+        try{
 
-        return redirect()->route('Admin.user.index');
+            $this->validator
+                    ->with($request->all())
+                    ->passesOrFail();
+
+            $user= $this->userRepository
+                        ->update(
+                            $request->all(),
+                            $id
+                        );
+
+            $message= ([
+                'message'=>'Usuario Editado',
+                'data'   =>$user->toArray()
+            ]);
+
+            return redirect()->route('Admin.user.index')->with('message',$message);
+
+        }catch (ValidatorException $e){
+            
+            $message= ([
+                'error'   =>true,
+                'message' =>$e->getMessage()
+            ]);
+
+            return redirect()->back()->with('message',$message);
+        } 
     }
 
     /**

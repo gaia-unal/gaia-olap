@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Repositories\ConnectionRepository;
+use App\Validator\ConnectionValidator;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 
 class ConnectionController extends Controller
@@ -12,10 +14,15 @@ class ConnectionController extends Controller
 
     private $connectionRepository;
 
+    private $validator;
 
-    public function __construct(ConnectionRepository $connectionRepository)
-    {
+    public function __construct(
+        ConnectionRepository $connectionRepository,
+        ConnectionValidator $validator
+        ){
+        
         $this->connectionRepository = $connectionRepository;
+        $this->validator = $validator;
     }
     /**
      * Display a listing of the resource.
@@ -26,7 +33,7 @@ class ConnectionController extends Controller
     public function index()
     {
         $connections = $this->connectionRepository
-                            ->paginateConnections(currentUser()->id);
+                            ->paginate($limit = 10);
         
         return view('Creator.connection.index')->with('connections',$connections);
     }
@@ -49,13 +56,34 @@ class ConnectionController extends Controller
      */
     public function store(Request $request)
     {
-        $user= $this->connectionRepository
-                    ->saveConnection(
-                        $this->connectionRepository
-                             ->createObject($request->all())
-                        );
+        try{
 
-        return redirect()->route('Creator.connection.index');
+            $this->validator
+                    ->with($request->all())
+                    ->passesOrFail();
+
+            $connection= $this  ->connectionRepository
+                                ->saveConnection($request->all());
+
+            $message= ([
+                'message'=>'Conexion Creada',
+                'data'   =>$connection
+            ]);
+
+            return redirect()   ->route('Creator.connection.index')
+                                ->with('message',$message);
+
+        }catch (ValidatorException $e){
+            
+            $message= ([
+                'error'   =>true,
+                'message' =>$e->getMessage()
+            ]);
+
+            return redirect()   ->back()
+                                ->with('message',$message);
+        }
+
     }
 
     /**
@@ -66,7 +94,8 @@ class ConnectionController extends Controller
      */
     public function show($id)
     {
-        $connection = $this->connectionRepository->consultConnection($id);
+        $connection= $this  ->connectionRepository
+                            ->find($id);
 
         return view('Creator.connection.show')->with('connection',$connection);
     }
@@ -79,8 +108,8 @@ class ConnectionController extends Controller
      */
     public function edit($id)
     {
-        $connection= $this->connectionRepository
-                    ->consultConnection($id);
+        $connection= $this  ->connectionRepository
+                            ->find($id);
 
         return view('Creator.connection.edit')->with('connection', $connection);
     }
@@ -101,6 +130,37 @@ class ConnectionController extends Controller
                     );
 
         return redirect()->route('Creator.connection.index');
+
+        try{
+
+            $this->validator
+                    ->with($request->all())
+                    ->passesOrFail();
+
+            $connection= $this  ->connectionRepository
+                                ->update(
+                                    $request->all(),
+                                    $id
+                                );
+
+            $message= ([
+                'message'=> 'Conexion Editada',
+                'data'   => $connection->toArray()
+            ]);
+
+            return redirect()   ->route('Creator.connection.index')
+                                ->with('message',$message);
+
+        }catch (ValidatorException $e){
+            
+            $message= ([
+                'error'   =>    true,
+                'message' =>    $e->getMessage()
+            ]);
+
+            return redirect()   ->back()
+                                ->with('message',$message);
+        }
     }
 
     /**
@@ -111,8 +171,8 @@ class ConnectionController extends Controller
      */
     public function destroy($id)
     {
-        $connection= $this->connectionRepository
-                    ->delete($id);
+        $connection= $this  ->connectionRepository
+                            ->delete($id);
 
         return redirect()->route('Creator.connection.index');
 

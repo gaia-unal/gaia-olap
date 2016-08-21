@@ -157,11 +157,12 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         /*
-        * Acacha AdminLTE template provider
+        * From third packages 
          */
         
         Acacha\AdminLTETemplateLaravel\Providers\AdminLTETemplateServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+        Prettus\Repository\Providers\RepositoryServiceProvider::class
 
     ],
 

@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Prettus\Repository\Eloquent\BaseRepository;
 use App\Entities\Connection;
 /**
 * 
@@ -9,44 +10,28 @@ use App\Entities\Connection;
 class ConnectionRepository extends BaseRepository
 {
 
-	public function getModel()
+	public function model()
 	{
-		return new Connection();
+		return Connection::getClass();
 	}
+
+	public function validator()
+    {
+        return 'App\Validator\ConnectionValidator';
+    }
 
 	public function createObject($connection)
 	{
 		return new Connection($connection);
 	}
 
-	public function paginateConnections($id)
+	public function saveConnection($connection)
 	{
-		return $this->newQuery()
-					->where('userId', $id)
-					->orderBy('id','ASC')
-					->paginate(10);
-	}
-
-	public function consultConnection($id)
-	{
-		return $this->newQuery()
-					->findOrFail($id);
-	}
-
-	public function saveConnection(Connection $connection)
-	{ 
+		$connection = $this->createObject($connection);
 		$connection->password = encrypt($connection-> password);
 		return $connection->save();
 
 	}
 
-	public function updateConnection($data, $id)
-	{
-		
-		return $this->newQuery()
-					->findOrFail($id)
-					->fill($data)
-					->save();
-	}
 
 }
