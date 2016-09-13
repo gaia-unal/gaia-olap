@@ -17,11 +17,7 @@ class Connection extends Entity
         'id','userId','name', 'host', 'port', 'userName', 'password', 'database'
     ];
 
-    protected $hidden = [
-        'password'
-    ];
-
-    
+  
 
      /*
      	

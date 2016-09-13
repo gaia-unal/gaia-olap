@@ -32,6 +32,9 @@ class ConnectionController extends Controller
 
     public function index()
     {
+        //$connections = $this->connectionRepository
+        //                    ->connection();
+
         $connections = $this->connectionRepository
                             ->paginate($limit = 10);
         
