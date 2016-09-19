@@ -8,8 +8,12 @@ use App\Database\ConnectionOnTheFly;
 /**
 * 
 */
+
+
 class ConnectionRepository extends BaseRepository
 {
+
+	private $connectionOnTheFly;
 
 	public function model()
 	{
@@ -36,22 +40,15 @@ class ConnectionRepository extends BaseRepository
 	public function connection()
 	{
         $connection = $this->find(1);
-		//dd($connection);
-		$connectionOnTheFly = new ConnectionOnTheFly($connection);
 		
-		//dd($connectionOnTheFly);
+		$this->connectionOnTheFly = new ConnectionOnTheFly($connection);
 		
-
-		$users = $connectionOnTheFly
-					->select("SELECT tablename FROM pg_tables WHERE schemaname = 'public'");
-
-		dd($users);
-
-		$users = $connectionOnTheFly->getTable('fact_table');
-		// Find the first user in the table
-		$first_user = $users->first();
-
-		dd($first_user);
+		// consultar todas las tablas
+		//$users = $this->connectionOnTheFly->SelectTables();
+		
+		//consultar una tabla especifica
+		//$users = $connectionOnTheFly->getTable('fact_table');
+ 
 	}
 
 

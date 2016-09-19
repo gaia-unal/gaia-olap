@@ -16,5 +16,9 @@ class PgSql {
 			        'prefix' 	=> '',
 	        ];
 	}
+	public function SelectTables()
+	{
+		return "SELECT tablename FROM pg_tables WHERE schemaname = 'public'";
+	}
 
 }

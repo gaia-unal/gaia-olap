@@ -18,7 +18,7 @@ class ConnectionValidator extends LaravelValidator {
    	];
    	
    	protected $messages = [
-    	'required' => 'The :attribute field is required.',
+    	'required' => 'El  :attribute es requerido.',
 	];
 
 }

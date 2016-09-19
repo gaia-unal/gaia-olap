@@ -25,14 +25,14 @@ class ConnectionOnTheFly {
 	 * @param  array $options
 	 * @return void
 	 */
-	//protected $motorDataBase;
+	protected $optionsData;
 
 	public function __construct($options = null)
 	{
 
-		$this->motorDataBase =  new pgConnection($options);
+		$this->optionsData =  new pgConnection($options);
 		
-		$options = $this->motorDataBase->getOption($options);
+		$options = $this->optionsData->getOption($options);
 		// Set the database
 		$database = $options['database'];
 		
@@ -78,5 +78,16 @@ class ConnectionOnTheFly {
 	{
 		return $this->getConnection()->select($select);
 	}
+
+
+	public function selectTables()
+	{
+		return $this->getConnection()
+					->select(
+							$this ->optionsData
+								  ->selectTables()
+						);
+	}
+
 
 }

@@ -14,7 +14,8 @@ class Connection extends Entity
      */
     
     protected $fillable = [
-        'id','userId','name', 'host', 'port', 'userName', 'password', 'database'
+        'id','userId','name', 'host', 'port', 'userName', 'password', 'database',
+        'prefix','schema','collaction','strict','engine'
     ];
 
   

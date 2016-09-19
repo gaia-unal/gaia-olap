@@ -3,42 +3,44 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use App\Http\Requests;
+use App\Repositories\CubeRepository;
 use App\Repositories\ConnectionRepository;
-use App\Validator\ConnectionValidator;
+use App\Validator\CubeValidator;
 use Prettus\Validator\Exceptions\ValidatorException;
 
-
-class ConnectionController extends Controller
+class CubeController extends Controller
 {
+
+    private $cubeRepository;
 
     private $connectionRepository;
 
     private $validator;
 
     public function __construct(
+        CubeRepository $cubeRepository,
         ConnectionRepository $connectionRepository,
-        ConnectionValidator $validator
+        CubeValidator $validator
         ){
         
+        $this->cubeRepository = $cubeRepository;
         $this->connectionRepository = $connectionRepository;
         $this->validator = $validator;
     }
-    /**
+
+       /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-
     public function index()
     {
-        $connections = $this->connectionRepository
-                            ->connection();
-
-        $connections = $this->connectionRepository
-                            ->paginate($limit = 10);
+        $cubes = $this  ->cubeRepository
+                        ->paginate($limit = 10);
         
-        return view('Creator.connection.index')->with('connections',$connections);
+        return view('Creator.cube.index')->with('cubes',$cubes);
     }
 
     /**
@@ -48,7 +50,11 @@ class ConnectionController extends Controller
      */
     public function create()
     {
-        return view('Creator.connection.create');
+        $connections = $this    ->connectionRepository
+                                ->orderBy('name','ASC')
+                                ->lists('name', 'id');
+
+        return view('Creator.cube.create')->with('connections',$connections);
     }
 
     /**
@@ -65,15 +71,15 @@ class ConnectionController extends Controller
                     ->with($request->all())
                     ->passesOrFail();
 
-            $connection= $this  ->connectionRepository
-                                ->saveConnection($request->all());
+            $cube= $this  ->cubeRepository
+                                ->create($request->all());
 
             $message= ([
                 'message'=>'Conexion Creada',
-                'data'   =>$connection
+                'data'   =>$cube
             ]);
 
-            return redirect()   ->route('Creator.connection.index')
+            return redirect()   ->route('Creator.cube.index')
                                 ->with('message',$message);
 
         }catch (ValidatorException $e){
@@ -86,7 +92,6 @@ class ConnectionController extends Controller
             return redirect()   ->back()
                                 ->with('message',$message);
         }
-
     }
 
     /**
@@ -97,10 +102,10 @@ class ConnectionController extends Controller
      */
     public function show($id)
     {
-        $connection= $this  ->connectionRepository
-                            ->find($id);
+        $cube= $this->cubeRepository
+                    ->find($id);
 
-        return view('Creator.connection.show')->with('connection',$connection);
+        return view('Creator.cube.show')->with('cube',$cube);
     }
 
     /**
@@ -111,10 +116,15 @@ class ConnectionController extends Controller
      */
     public function edit($id)
     {
-        $connection= $this  ->connectionRepository
-                            ->find($id);
+        $connections=   $this   ->connectionRepository
+                                ->orderBy('name','ASC')
+                                ->lists('name', 'id');
 
-        return view('Creator.connection.edit')->with('connection', $connection);
+        $cube=$this  ->cubeRepository
+                    ->find($id);
+
+        return view('Creator.cube.edit')->with('cube', $cube)
+                                        ->with('connections', $connections);
     }
 
     /**
@@ -132,7 +142,7 @@ class ConnectionController extends Controller
                     ->with($request->all())
                     ->passesOrFail();
 
-            $connection= $this  ->connectionRepository
+            $cube= $this  ->cubeRepository
                                 ->update(
                                     $request->all(),
                                     $id
@@ -140,10 +150,10 @@ class ConnectionController extends Controller
 
             $message= ([
                 'message'=> 'Conexion Editada',
-                'data'   => $connection->toArray()
+                'data'   => $cube->toArray()
             ]);
 
-            return redirect()   ->route('Creator.connection.index')
+            return redirect()   ->route('Creator.cube.index')
                                 ->with('message',$message);
 
         }catch (ValidatorException $e){
@@ -166,10 +176,9 @@ class ConnectionController extends Controller
      */
     public function destroy($id)
     {
-        $connection= $this  ->connectionRepository
+        $cube= $this  ->cubeRepository
                             ->delete($id);
 
-        return redirect()->route('Creator.connection.index');
-
+        return redirect()->route('Creator.cube.index');
     }
 }

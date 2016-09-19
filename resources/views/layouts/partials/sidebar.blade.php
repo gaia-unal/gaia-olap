@@ -44,6 +44,7 @@
                 <li class="header">Creador</li>
                 <li><a href="{{ route('Creator.index') }}"><i class='fa fa-link'></i> <span>Sección Creador</span></a></li>
                 <li><a href="{{ route('Creator.connection.index') }}"><i class='fa fa-link'></i> <span>Conexiones</span></a></li>
+                <li><a href="{{ route('Creator.cube.index') }}"><i class='fa fa-link'></i> <span>Cubos</span></a></li>
 
             @endif 
             <li><a href="{{ url('/') }}"><i class='fa fa-link'></i> <span>Pagina Publica</span></a></li>

@@ -37,6 +37,10 @@ Route::group(['middleware' => 'auth'], function(){
 		]);
 
 		Route::resource('connection','ConnectionController');
+
+		Route::resource('cube','cubeController');
+
+
 	});
 
 });

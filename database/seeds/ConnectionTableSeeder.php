@@ -16,7 +16,8 @@ class ConnectionTableSeeder extends Seeder
         Connection::create([
     		'userId' 	=> 1,
     		'name'		=> 'idea',
-    		'host'		=> 'http://froac.manizales.unal.edu.co',
+            'motor'     => 'pgsql',
+    		'host'		=> 'froac.manizales.unal.edu.co',
     		'port'		=> 5432,
     		'userName'	=> 'postgres',
     		'password'	=> encrypt('%froac$'),
@@ -26,7 +27,8 @@ class ConnectionTableSeeder extends Seeder
     	Connection::create([
     		'userId' 	=> 2,
     		'name'		=> 'idea',
-    		'host'		=> 'http://froac.manizales.unal.edu.co',
+            'motor'     => 'pgsql',
+    		'host'		=> 'froac.manizales.unal.edu.co',
     		'port'		=> 5432,
     		'userName'	=> 'postgres',
     		'password'	=> encrypt('%froac$'),
@@ -36,7 +38,8 @@ class ConnectionTableSeeder extends Seeder
     	Connection::create([
     		'userId' 	=> 2,
     		'name'		=> 'idea',
-    		'host'		=> 'http://froac.manizales.unal.edu.co',
+            'motor'     => 'pgsql',
+    		'host'		=> 'froac.manizales.unal.edu.co',
     		'port'		=> 5432,
     		'userName'	=> 'postgres',
     		'password'	=> encrypt('%froac$'),

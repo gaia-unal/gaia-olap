@@ -17,11 +17,21 @@ class CreateConexionesTable extends Migration
             $table->increments('id');
             $table->integer('userId');
             $table->string('name');
+            $table->enum('motor',['pgsql','mysql'])->default('pgsql');
             $table->string('host');
             $table->string('port');
             $table->string('userName');
             $table->string('password');
             $table->string('database');
+
+            $table->string('prefix')->default('utf8');
+            $table->string('schema')->default('public');
+
+            $table->string('collaction')->default('utf8_unicode_ci');  
+            $table->boolean('strict')->default(true);
+            $table->string('engine')->nullable()->default(null);      
+
+
 
             $table->foreign('userId')->references('id')->on('users')->onDelete('cascade');
 

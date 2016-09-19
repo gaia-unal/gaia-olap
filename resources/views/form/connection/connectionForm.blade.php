@@ -10,6 +10,14 @@
 	</div>
 </div>
 
+<div class="form-group has-feedback">
+	{!! Form::label('motor','Motor',['class' => 'col-sm-2 control-label']) !!}
+		
+	<div class="col-sm-10">
+		{!! Form::select('motor',['pgsql'=> 'PostgreSql', 'mysql'=> 'MySQL'], null, ['class' => 'form-control', 'required']) !!}
+	</div>			
+</div>
+
 <div class="form-group">
 	{!! Form::label('host','Host',['class' => 'col-sm-2 control-label']) !!}
 	<div class="col-sm-10">
@@ -54,7 +62,9 @@
 	<div class="pull-right">
 		<button  type="submit" class="btn btn-success pull-right"  >Enviar</button>
 		&nbsp;
-		<a href="#" class="btn btn-default" id='test_connection' disabled="none">Probar</a>
+		@if($action == 'create')
+			<a href="#" class="btn btn-default" id='test_connection' disabled="none">Probar</a>
+		@endif
 	</div>
 
 </div>

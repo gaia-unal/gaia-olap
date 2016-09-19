@@ -10,32 +10,32 @@
 	<div class="col-md-4">
 		<div class="box box-success">
 			<div class="box-body box-profile">
-				<img class="profile-user-img img-responsive img-circle" src="{{ asset('img/connection.png') }}" alt="User profile picture">
-				<h3 class="profile-username text-center">{{ $connection->name }}</h3>
-				<p class="text-muted text-center">{{ $connection->user->name }}</p>
+				<img class="profile-user-img img-responsive img-circle" src="{{ asset('img/3d-cube.png') }}" alt="User profile picture">
+				<h3 class="profile-username text-center">{{ $cube->name }}</h3>
+				<p class="text-muted text-center">{{ $cube->connection->name }}</p>
 
 				<ul class="list-group list-group-unbordered">
 					<li class="list-group-item">
-						<b>Host</b>
-						<a class="pull-right">{{ $connection->host }}</a>
+						<b>Tablas</b>
+						<a class="pull-right">10</a>
 					</li>
 					<li class="list-group-item">
-						<b>Puerto</b>
-						<a class="pull-right">{{ $connection->port }}</a>
+						<b>Compartido</b>
+						<a class="pull-right">50</a>
 					</li>
 					<li class="list-group-item">
-						<b>Nombre de usuario</b>
-						<a class="pull-right">{{ $connection->userName }}</a>
+						<b>visualizaciones</b>
+						<a class="pull-right">3000</a>
 					</li>
 					<li class="list-group-item">
-						<b>Base de datos</b>
-						<a class="pull-right">{{ $connection->database }}</a>
+						<b>Descripcion</b>
+						<a class="pull-right">{{ $cube->description }}</a>
 					</li>
 				</ul>
-				<a href="{{ route('Creator.connection.index')}}" class="btn btn-success  col-md-5"><b>
+				<a href="{{ route('Creator.cube.index')}}" class="btn btn-success  col-md-5"><b>
 				Volver</b></a>
 				&nbsp;
-				<a href="{{ route('Creator.connection.edit', $connection->id)}}" class="btn btn-success col-md-5 pull-right"><b>
+				<a href="{{ route('Creator.cube.edit', $cube->id)}}" class="btn btn-success col-md-5 pull-right"><b>
 				Editar</b></a>
 			</div>
 		</div>
@@ -49,7 +49,7 @@
 				</div>
 			</div>
 			<div class="box-body">
-   				<img class="" width="600" align="center"  src="{{ asset('img/graficos.png') }}" alt="User profile picture">
+   				<p>Aqui van los estadisticos !cuando esten listos claro!</p>
 			</div>
 		</div>
 	</div>
