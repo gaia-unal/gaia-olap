@@ -74,9 +74,14 @@ Route::group(['middleware' => 'auth'], function(){
 				'as'	=> 'Creator.processComplete.storeCube'
 			]);
 
-			Route::post('/cubeTable',[
+			Route::get('/cubeTable/{cubeId}',[
 				'uses' 	=> 'processCompleteController@cubeTable',
 				'as'	=> 'Creator.processComplete.cubeTable'
+			]);
+
+			Route::post('/proccessTables',[
+				'uses' 	=> 'processCompleteController@proccessTables',
+				'as'	=> 'Creator.processComplete.proccessTables'
 			]);
 		});
 	});

@@ -70,15 +70,13 @@ class processCompleteController extends Controller
 
             $cube= $this  	->cubeRepository
                         	->create($request->all());
-
-            $tables = $this	->connectionRepository
-            				->SelectTables($cube->connectionId);
-
+            
             $message= ([
                 'message'=>'Cubo Creado',
             ]);
 
-            return view('Creator.processComplete.cubeTable')->with('tables', $tables);
+            return redirect() ->route('Creator.processComplete.cubeTable',['cubeId' => $cube->id]);
+
 
         }catch (ValidatorException $e){
             
@@ -125,8 +123,19 @@ class processCompleteController extends Controller
 
     }
 
-    public function cubeTable(Request $request)
+    public function cubeTable($cubeId)
     {
-    	dd($request->all());
+    	$cube =$this->cubeRepository
+    				->find($cubeId); 
+
+    	$tables = $this	->connectionRepository
+            			->SelectTables($cube->connectionId);
+
+        return view('Creator.processComplete.cubeTable')->with('tables', $tables);
+    }
+
+    public function proccessTables(Request $request)
+    {
+        dd($request->all());
     }
 }
