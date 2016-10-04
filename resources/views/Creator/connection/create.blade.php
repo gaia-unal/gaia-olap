@@ -18,10 +18,20 @@
 
 	    @include('layouts.partials.errors')
 
-		{!! Form::open(['route'=> 'Creator.connection.store','method'=> 'POST', 'class'=> 'form-horizontal']) !!}	
+		{!! Form::open(['route'=> 'Creator.connection.store','method'=> 'POST', 'class'=> 'form-horizontal', 'id'=>'ConnectionCreate']) !!}	
 			@include('form.connection.connectionForm',['cancelar' => 'Creator.connection.index', 'action' => 'create'])
 		{!! Form::close() !!}
 	</div>
 </div>
 
 @endsection
+
+@section('personal-js')
+    <script>
+		$('#test_connection').click(function () {
+           
+			var data = $('#ConnectionCreate');
+			alert(data);
+		});
+    </script>
+ @endsection   

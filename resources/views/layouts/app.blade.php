@@ -65,5 +65,8 @@ desired effect
     @include('layouts.partials.scripts')
 @show
 
+@yield('personal-js')
+
+
 </body>
 </html>

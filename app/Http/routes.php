@@ -41,6 +41,44 @@ Route::group(['middleware' => 'auth'], function(){
 		Route::resource('cube','cubeController');
 
 
+		Route::get('/processComplete',[
+			'uses' 	=> 'CreatorController@processComplete',
+			'as'	=> 'Creator.processComplete'
+		]);
+
+
+		Route::group(['prefix' => 'processComplete'], function(){
+		
+			Route::get('/',[
+				'uses' 	=> 'processCompleteController@index',
+				'as'	=> 'Creator.processComplete.index'
+			]);
+
+			Route::post('/selectedConnection',[
+				'uses' 	=> 'processCompleteController@selectedConnection',
+				'as'	=> 'Creator.processComplete.selectedConnection'
+			]);
+
+			Route::get('/createdConnection',[
+				'uses' 	=> 'processCompleteController@createdConnection',
+				'as'	=> 'Creator.processComplete.createdConnection'
+			]);
+
+			Route::post('/storeConnection',[
+				'uses' 	=> 'processCompleteController@storeConnection',
+				'as'	=> 'Creator.processComplete.storeConnection'
+			]);
+
+			Route::post('/storeCube',[
+				'uses' 	=> 'processCompleteController@storeCube',
+				'as'	=> 'Creator.processComplete.storeCube'
+			]);
+
+			Route::post('/cubeTable',[
+				'uses' 	=> 'processCompleteController@cubeTable',
+				'as'	=> 'Creator.processComplete.cubeTable'
+			]);
+		});
 	});
 
 });

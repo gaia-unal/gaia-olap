@@ -52,6 +52,7 @@ class ConnectionOnTheFly {
 		// Set the temporary configuration
 		Config::set("database.connections.$database", $default);
 		// Create the connection
+		
 		$this->connection = DB::connection($database);
 	}
 	/**
@@ -78,14 +79,18 @@ class ConnectionOnTheFly {
 	{
 		return $this->getConnection()->select($select);
 	}
+	
+	public function test(){
+		return false;
+	}
 
 
 	public function selectTables()
 	{
 		return $this->getConnection()
 					->select(
-							$this ->optionsData
-								  ->selectTables()
+						$this	->optionsData
+								->selectTables()
 						);
 	}
 

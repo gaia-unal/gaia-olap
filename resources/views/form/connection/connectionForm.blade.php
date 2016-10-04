@@ -61,10 +61,7 @@
 	
 	<div class="pull-right">
 		<button  type="submit" class="btn btn-success pull-right"  >Enviar</button>
-		&nbsp;
-		@if($action == 'create')
-			<a href="#" class="btn btn-default" id='test_connection' disabled="none">Probar</a>
-		@endif
 	</div>
 
 </div>
+

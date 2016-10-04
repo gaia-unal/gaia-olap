@@ -32,8 +32,6 @@ class ConnectionController extends Controller
 
     public function index()
     {
-        $connections = $this->connectionRepository
-                            ->connection();
 
         $connections = $this->connectionRepository
                             ->paginate($limit = 10);
@@ -65,21 +63,33 @@ class ConnectionController extends Controller
                     ->with($request->all())
                     ->passesOrFail();
 
-            $connection= $this  ->connectionRepository
-                                ->saveConnection($request->all());
+            if ($this->testConnection($request->all())) {
 
-            $message= ([
-                'message'=>'Conexion Creada',
-                'data'   =>$connection
-            ]);
+                $connection= $this  ->connectionRepository
+                                    ->saveConnection($request->all());
 
-            return redirect()   ->route('Creator.connection.index')
-                                ->with('message',$message);
+                $message= ([
+                    'message'=>'Conexion Creada',
+                    'data'   =>$connection
+                ]);
 
+                return redirect()   ->route('Creator.connection.index')
+                                    ->with('message',$message);
+            }else{
+
+                $message= ([
+                    'message'=>'Coneccion No creada',
+                ]);
+
+                return back()   ->withInput()
+                                ->with('message', $message);
+            }
+            
         }catch (ValidatorException $e){
             
             $message= ([
                 'error'   =>true,
+                'error'   =>    true,
                 'message' =>$e->getMessage()
             ]);
 
@@ -132,19 +142,30 @@ class ConnectionController extends Controller
                     ->with($request->all())
                     ->passesOrFail();
 
-            $connection= $this  ->connectionRepository
-                                ->update(
-                                    $request->all(),
-                                    $id
-                                );
+            if ($this->testConnection($request->all())) {
+                
+                $connection= $this  ->connectionRepository
+                                    ->update(
+                                        $request->all(),
+                                        $id
+                                    );
 
-            $message= ([
-                'message'=> 'Conexion Editada',
-                'data'   => $connection->toArray()
-            ]);
+                $message= ([
+                    'message'=> 'Conexion Editada',
+                    'data'   => $connection->toArray()
+                ]);
 
-            return redirect()   ->route('Creator.connection.index')
-                                ->with('message',$message);
+                return redirect()   ->route('Creator.connection.index')
+                                    ->with('message',$message);
+            }else{
+                $message= ([
+                    'error'   =>    true,
+                    'message'=>'Coneccion No Editada',
+                ]);
+
+                return back()   ->withInput()
+                                ->with('message', $message);
+            }
 
         }catch (ValidatorException $e){
             
@@ -172,4 +193,10 @@ class ConnectionController extends Controller
         return redirect()->route('Creator.connection.index');
 
     }
+    private function testConnection($conection){
+        
+        return $Messajeconnection=$this   ->connectionRepository
+                                          ->testConnection($conection);
+
+        }  
 }
