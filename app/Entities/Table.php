@@ -14,7 +14,7 @@ class Table extends Entity
      */
     protected $fillable = [
         'id', 'cubeId','name', 'masked','principal'
-    ]
+    ];
 
     public function cube()
      {

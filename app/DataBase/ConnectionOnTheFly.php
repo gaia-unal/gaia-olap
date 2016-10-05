@@ -70,10 +70,12 @@ class ConnectionOnTheFly {
 	 * @var    string $table
 	 * @return \Illuminate\Database\Query\Builder
 	 */
-	public function getTable($table = null)
+	public function getTable($table)
 	{
 		return $this->getConnection()->table($table);
 	}
+
+
 
 	public function select($select = null)
 	{
@@ -92,6 +94,15 @@ class ConnectionOnTheFly {
 						$this	->optionsData
 								->selectTables()
 						);
+	}
+
+	public function selectColum($tableName)
+	{
+		return $this->getConnection()
+					->select(
+						$this	->optionsData
+								->selectCampos($tableName)
+					);
 	}
 
 

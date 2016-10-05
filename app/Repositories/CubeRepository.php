@@ -28,4 +28,14 @@ class CubeRepository extends BaseRepository
 		return new Cube($cube);
 	}
 
+	public function deletlevel($cubes)
+	{
+		$cube = null;
+		foreach ($cubes as $key => $value)
+		{
+    		$cube = $value;
+		}
+		return $cube;
+	}
+
 }

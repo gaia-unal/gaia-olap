@@ -20,6 +20,8 @@
 			{!! Form::open(['route'=> 'Creator.processComplete.proccessTables','method'=> 'POST', 'class'=> 'form-horizontal', 'id'=>'formulario']) !!} 
 				<div class="form-group">
 
+					<input type="hidden" name="cubeId" value="{{ $cubeId }}">					
+
 					<div class="col-md-8 col-md-offset-2 invoice-col" align="center">		
 						<div class="col-md-4">
 							<select class="col-md-12 " name="origen[]" id="origen" multiple="multiple" size="8">
