@@ -42,38 +42,19 @@ class TableRepository extends BaseRepository
 	public function selectColum($table,$connection)
 	{
 		$this->connectionOnTheFly = new ConnectionOnTheFly($connection);		
-		
-		$primaryKeys= $this	->connectionOnTheFly
-							->selectPrimaryKey($table->name);
-		dd($primaryKeys);
 
 		$fields = $this	->connectionOnTheFly
 						->selectColum($table->name);
 
-		foreach ($fields as $field_key => $field) {
-			
-			if (count($primaryKeys) > 1) {
-				
-				foreach ($primaryKeys as $primaryKey_key => $primaryKey) {
-					
-					if ($field->column_name == $primaryKey->column_name) {
-						$field->primaryKey = true;
-					}else{
-						$field->primaryKey = false;
-					}
-				}
-			}elseif (count($primaryKeys) = 1) {
-				if ($field->column_name == $primaryKeys->column_name) {
-					$field->primaryKey = true;
-				}else{
-					$field->primaryKey = false;
-				}	
-			}else{
-				$field->primaryKey = false;
-			}
+		$primariKeys= $this	->connectionOnTheFly
+							->selectPrimaryKey($table->name);
+		if ($primariKeys) {
+			$table->primariKey = true;
+		}else{
+			$table->primariKey= false;
 		}
 
-		return $fields;
+		return $this->intagrationPrimaryKey($fields,$primariKeys);
 
 	}
 
@@ -90,11 +71,7 @@ class TableRepository extends BaseRepository
 			}else{
 				$value->foreignKeys = false;
 			}
-			
-		
 		}
-
-		dd($tables);
 
 		return $tables;
 	}
@@ -109,6 +86,29 @@ class TableRepository extends BaseRepository
 		return $foreignKeys= $this	->connectionOnTheFly
 									->selectForeignKey($fact_table);
 
+	}
+
+	public function getPrimaryKeys($table_name,$connection)
+	{
+		$this->connectionOnTheFly = new ConnectionOnTheFly($connection);
+		
+		return $foreignKeys= $this	->connectionOnTheFly
+									->selectPrimaryKey($table_name);
+	}
+
+	public function intagrationPrimaryKey($fields,$primariKeys)
+	{
+		foreach ($fields as $fieldskey => $field) {
+			$field->primariKey = false;
+			foreach ($primariKeys as $key => $value) {
+				
+				if ($field->column_name == $value->column_name) {
+					$field->primariKey = true;
+				}
+			}
+		}
+
+		return $fields; 
 	}
 	
 }

@@ -194,6 +194,7 @@ class processCompleteController extends Controller
 
     public function proccessTables(Request $request)
     {
+        
         $data = $request->all();
 
         $table = $this  ->tableRepository

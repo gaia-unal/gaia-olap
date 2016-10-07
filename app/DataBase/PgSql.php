@@ -27,17 +27,19 @@ class PgSql {
 	}
 	public function selectPrimaryKey($table_name)
 	{
-		return	"SELECT information_schema.table_constraints.constraint_name,
-						information_schema.table_constraints.table_name,
+		return	"SELECT 
 						information_schema.table_constraints.constraint_type,
 						information_schema.key_column_usage.column_name
+						
+					FROM 
+						information_schema.table_constraints,
+						information_schema.key_column_usage
 
-					from information_schema.table_constraints,information_schema.key_column_usage
-					where  	information_schema.table_constraints.table_name='$table_name' and 
-							information_schema.table_constraints.constraint_type = 'PRIMARY KEY' and
-							information_schema.table_constraints.table_schema = 'public' and 
-							information_schema.key_column_usage.table_name = '$table_name' and
-							information_schema.key_column_usage.table_schema = 'public' ";
+					WHERE 
+						information_schema.table_constraints.constraint_type = 'PRIMARY KEY' and
+						information_schema.key_column_usage.table_schema = 'public' and
+						information_schema.table_constraints.table_name = '$table_name' and
+						information_schema.table_constraints.constraint_name = information_schema.key_column_usage.constraint_name ";
 	}
 
 	public function selectForeignKey($table_name)
@@ -47,3 +49,4 @@ class PgSql {
 
 }
 
+	

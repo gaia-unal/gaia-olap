@@ -98,12 +98,17 @@ class ConnectionOnTheFly {
 
 	public function selectColum($tableName)
 	{
-		return $this->getConnection()
+		$data =$this->getConnection()
 					->select(
 						$this	->optionsData
 								->selectCampos($tableName)
 					);
+
+		return $data;
+
 	}
+
+
 	public function selectPrimaryKey($table_name){
 		
 		$data=  $this	->getConnection()
@@ -112,12 +117,7 @@ class ConnectionOnTheFly {
 									->selectPrimaryKey($table_name)
 							);
 
-		
-		if (count($data) == 0) {
-				return false;
-			}else{
-				return $data;
-			}
+		return $data;
 	}
 
 	public function selectForeignKey($table_name){
@@ -127,11 +127,8 @@ class ConnectionOnTheFly {
 							$this	->optionsData
 									->selectForeignKey($table_name)
 							);
-		if (count($data) == 0) {
-			return false;
-		}else{
-			return $data;
-		}
+		return $data;
+		
 	}
 
 
