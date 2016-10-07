@@ -157,7 +157,7 @@ class processCompleteController extends Controller
                     ->passesOrFail();
 
             $connection= $this	->connectionRepository
-                        		->create($request->all());
+                        		->saveConnection($request->all());
 
             $message= ([
                 'message'=>'Conexion Creada',
@@ -204,7 +204,7 @@ class processCompleteController extends Controller
         $connection = $this->getConnectionCube($cube->connectionId);
 
         $tablesFields =  $this->tableRepository
-                        ->selectColumTables($newTables,$connection);
+                        ->selectColumTables($data['fact'][0],$newTables,$connection);
         
         dd($tablesFields);
     }

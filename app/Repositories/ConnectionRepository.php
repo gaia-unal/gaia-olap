@@ -44,7 +44,7 @@ class ConnectionRepository extends BaseRepository
 	{
 		$connection = $this->createObject($connection);
 		$connection->password = encrypt($connection-> password);
-		return $connection->save();
+		return $this->create($connection->toArray());
 	}
 
 	public function testConnection($connection)

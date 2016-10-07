@@ -104,6 +104,35 @@ class ConnectionOnTheFly {
 								->selectCampos($tableName)
 					);
 	}
+	public function selectPrimaryKey($table_name){
+		
+		$data=  $this	->getConnection()
+						->select(
+							$this	->optionsData
+									->selectPrimaryKey($table_name)
+							);
+
+		
+		if (count($data) == 0) {
+				return false;
+			}else{
+				return $data;
+			}
+	}
+
+	public function selectForeignKey($table_name){
+		
+		$data=  $this	->getConnection()
+						->select(
+							$this	->optionsData
+									->selectForeignKey($table_name)
+							);
+		if (count($data) == 0) {
+			return false;
+		}else{
+			return $data;
+		}
+	}
 
 
 }

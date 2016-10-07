@@ -22,13 +22,27 @@ class PgSql {
 	}
 	public function selectCampos($table)
 	{
-		return "SELECT column_name from information_schema.columns where table_name ='$table'";
+		return "SELECT column_name,data_type from information_schema.columns where table_name ='$table'";
+
 	}
-	public function selectSchema($table)
+	public function selectPrimaryKey($table_name)
 	{
-		return "SELECT a.CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS a 
-                            JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE b on a.CONSTRAINT_NAME = b.CONSTRAINT_NAME
-                            WHERE a.TABLE_NAME = '$table' AND b.COLUMN_NAME = '$column' AND a.CONSTRAINT_TYPE = 'PRIMARY KEY'";
+		return	"SELECT information_schema.table_constraints.constraint_name,
+						information_schema.table_constraints.table_name,
+						information_schema.table_constraints.constraint_type,
+						information_schema.key_column_usage.column_name
+
+					from information_schema.table_constraints,information_schema.key_column_usage
+					where  	information_schema.table_constraints.table_name='$table_name' and 
+							information_schema.table_constraints.constraint_type = 'PRIMARY KEY' and
+							information_schema.table_constraints.table_schema = 'public' and 
+							information_schema.key_column_usage.table_name = '$table_name' and
+							information_schema.key_column_usage.table_schema = 'public' ";
+	}
+
+	public function selectForeignKey($table_name)
+	{
+		return	"SELECT constraint_name,column_name from information_schema.key_column_usage where table_name = '$table_name'";					
 	}
 
 }
