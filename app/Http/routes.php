@@ -83,6 +83,11 @@ Route::group(['middleware' => 'auth'], function(){
 				'uses' 	=> 'processCompleteController@proccessTables',
 				'as'	=> 'Creator.processComplete.proccessTables'
 			]);
+
+			Route::get('/validateField/{cubeId}',[
+				'uses' 	=> 'processCompleteController@validateField',
+				'as'	=> 'Creator.processComplete.validateField'
+			]);
 		});
 	});
 

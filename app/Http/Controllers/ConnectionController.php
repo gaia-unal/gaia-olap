@@ -6,21 +6,23 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Repositories\ConnectionRepository;
 use App\Validator\ConnectionValidator;
+use App\Repositories\FieldRepository;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 
 class ConnectionController extends Controller
 {
-
+    private $fieldRepository;
     private $connectionRepository;
 
     private $validator;
 
     public function __construct(
+                FieldRepository $fieldRepository,
         ConnectionRepository $connectionRepository,
         ConnectionValidator $validator
         ){
-        
+                $this->fieldRepository = $fieldRepository;
         $this->connectionRepository = $connectionRepository;
         $this->validator = $validator;
     }

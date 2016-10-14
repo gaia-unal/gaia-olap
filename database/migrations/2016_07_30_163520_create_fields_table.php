@@ -17,8 +17,11 @@ class CreateFieldsTable extends Migration
             $table->increments('id');
             $table->integer('tableId');
             $table->string('name');
+            $table->string('type');
             $table->string('masked')->nullable()->default(null);
-
+            $table->boolean('visible')->default(true);
+            $table->boolean('primariKey')->default(false);
+            
             $table->foreign('tableId')->references('id')->on('tables')->onDelete('cascade');
 
 

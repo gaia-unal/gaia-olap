@@ -7,10 +7,15 @@ use App\Http\Requests;
 use App\Repositories\CubeRepository;
 use App\Repositories\ConnectionRepository;
 use App\Repositories\TableRepository;
+use App\Repositories\FieldRepository;
+use App\Repositories\RelationRepository;
 use App\Validator\ConnectionValidator;
 use App\Validator\CubeValidator;
 use App\Validator\TableValidator;
+use App\Validator\FieldValidator;
+use App\Validator\RelationValidator;
 use Prettus\Validator\Exceptions\ValidatorException;
+
 
 class processCompleteController extends Controller
 {
@@ -20,26 +25,42 @@ class processCompleteController extends Controller
 
     private $tableRepository;
 
+    private $fieldRepository;
+
+    private $relationRepository;
+
     private $connectionValidator;
 
     private $cubeValidator;
 
     private $tableValidator;
 
+    private $fieldValidator;
+
+    private $relationValidator;
+
     public function __construct(
     	CubeRepository $cubeRepository,
         ConnectionRepository $connectionRepository,
         TableRepository $tableRepository,
+        FieldRepository $fieldRepository,
+        RelationRepository $relationRepository,
         ConnectionValidator $connectionValidator,
         TableValidator $tableValidator,
+        FieldValidator $fieldValidator,
+        RelationValidator $relationValidator,
         CubeValidator $cubeValidator
         ){
         $this->tableRepository=$tableRepository;
         $this->cubeRepository = $cubeRepository;
         $this->connectionRepository = $connectionRepository;
+        $this->fieldRepository = $fieldRepository;
+        $this->relationRepository = $relationRepository;
         $this->cubeValidator = $cubeValidator;
         $this->connectionValidator = $connectionValidator;
         $this->tableValidator = $tableValidator;
+        $this->fieldValidator = $fieldValidator;
+        $this->relationValidator = $relationValidator;
     }
     
     protected function saveTable($table)
@@ -205,9 +226,93 @@ class processCompleteController extends Controller
         $connection = $this->getConnectionCube($cube->connectionId);
 
         $tablesFields =  $this->tableRepository
-                        ->selectColumTables($data['fact'][0],$newTables,$connection);
+                        ->selectColumTables(
+                                $data['fact'][0],
+                                $newTables,
+                                $connection
+                        );
+
+        $cubeId = $this->storeFieldsTable($tablesFields);
+
+
+        return redirect() ->route('Creator.processComplete.validateField',['cubeId' => $cube->id]);
         
-        dd($tablesFields);
+    }
+
+
+    private function storeFieldsTable($tablesFields)
+    {
+        $principal = false;
+
+        foreach ($tablesFields as $key => $tableFields) {
+
+            $fieldsAll=$this->createArray($tableFields->fields);
+
+            if ($tableFields->principal) {
+                $principal = $tableFields;
+
+            }
+        }
+        if ($principal) {
+            $foreignKey = $this->storeForeign($principal);
+        }
+        return $principal->cubeId;
+    }
+
+    private function createArray($fields)
+    {
+        $fieldsNew[] = null;
+        $pos = 0;
+        
+        foreach ($fields as $key => $field) {
+            $fieldsNew[$pos] = $this->fieldRepository->create(get_object_vars($field));
+            $pos++;
+        }
+
+        return $fieldsNew;
+    }
+
+    private function storeForeign($table)
+    {    
+            if ($table->foreignKeys) {
+                foreach ($table->foreignKeys as $key => $value) {
+                    
+                    $value->idLocalTable = $table->id;
+                    $value->idLocalFiel = $this   ->fieldRepository
+                                                    ->selectField(
+                                                        $value->column_name_reference,
+                                                        $value->idLocalTable
+                                                        );
+                    $value->idReferenceTable = $this ->tableRepository
+                                                    ->selectTable(
+                                                            $value->table_name_reference,
+                                                            $table->cubeId
+                                                        );
+                    $value->idReferenceFiel=$this   ->fieldRepository
+                                                    ->selectField(
+                                                        $value->column_name_reference,
+                                                        $value->idReferenceTable
+                                                        );
+                    $value->nameRelationship = $value->constraint_name;
+                    $value->nameLocalTable = $value->table_name;
+                    $value->nameLocalField = $value->column_name;
+                    $value->nameReferenceTable = $value->table_name_reference;
+                    $value->nameReferenceField = $value->column_name_reference;
+
+                    $newValue = $this->relationRepository->create(get_object_vars($value));
+                }
+
+                return true;
+
+            }else{
+                return false;
+            }
+
+    }
+
+    public function validateField($cubeId)
+    {
+        dd($cubeId);
     }
 
 

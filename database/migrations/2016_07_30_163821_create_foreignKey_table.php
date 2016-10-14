@@ -15,13 +15,22 @@ class CreateForeignKeyTable extends Migration
         Schema::create('foreignKey', function (Blueprint $table) {
             
             $table->increments('id');
-            $table->integer('fieldId');
-            $table->integer('tableId');
+            $table->integer('idLocalFiel');
+            $table->integer('idLocalTable');
+            $table->integer('idReferenceTable');
+            $table->integer('idReferenceFiel');
+
+            $table->string('nameLocalTable')->nullable()->default(null);
+            $table->string('nameLocalField')->nullable()->default(null);
+            $table->string('nameReferenceTable')->nullable()->default(null);
+            $table->string('nameReferenceField')->nullable()->default(null);
 
             $table->string('nameRelationship')->nullable()->default(null);
             
-            $table->foreign('fieldId')->references('id')->on('fields')->onDelete('cascade');
-            $table->foreign('tableId')->references('id')->on('tables')->onDelete('cascade');
+            $table->foreign('idLocalFiel')->references('id')->on('fields')->onDelete('cascade');
+            $table->foreign('idReferenceFiel')->references('id')->on('fields')->onDelete('cascade');
+            $table->foreign('idLocalTable')->references('id')->on('tables')->onDelete('cascade');
+            $table->foreign('idReferenceTable')->references('id')->on('tables')->onDelete('cascade');
 
 
             $table->timestamps();

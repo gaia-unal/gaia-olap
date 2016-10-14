@@ -2,10 +2,9 @@
 
 namespace App\Entities;
 
-
 class Field extends Entity
 {
-     protected $table = 'fields';
+    protected $table = 'fields';
 
     /**
      * The attributes that are mass assignable.
@@ -14,17 +13,21 @@ class Field extends Entity
      */
     
     protected $fillable = [
-        'id', 'tableId','name', 'masked'
-    ]
-
+        'id', 'tableId','name', 'masked','type','visible','primariKey'
+    ];
 
     public function table()
      {
      	return $this->belongsTo(Table::getClass(), 'tableId');
      }
 
-    public function foreignKeys()
+    public function localForeignKeys()
     {
-        return $this->hasMany(ForeignKey::getClass(), 'fieldId');
+        return $this->hasMany(ForeignKey::getClass(), 'idLocalFiel');
+    }
+
+    public function referenceForeignKeys()
+    {
+        return $this->hasMany(ForeignKey::getClass(), 'idReferenceFiel');
     }
 }

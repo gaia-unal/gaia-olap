@@ -48,13 +48,14 @@ class TableRepository extends BaseRepository
 
 		$primariKeys= $this	->connectionOnTheFly
 							->selectPrimaryKey($table->name);
+		
 		if ($primariKeys) {
 			$table->primariKey = true;
 		}else{
 			$table->primariKey= false;
 		}
 
-		return $this->intagrationPrimaryKey($fields,$primariKeys);
+		return $this->intagrationPrimaryKey($fields,$primariKeys,$table->id);
 
 	}
 
@@ -96,19 +97,28 @@ class TableRepository extends BaseRepository
 									->selectPrimaryKey($table_name);
 	}
 
-	public function intagrationPrimaryKey($fields,$primariKeys)
+	public function intagrationPrimaryKey($fields,$primariKeys,$tableId)
 	{
 		foreach ($fields as $fieldskey => $field) {
 			$field->primariKey = false;
 			foreach ($primariKeys as $key => $value) {
 				
-				if ($field->column_name == $value->column_name) {
+				$field->tableId = $tableId;
+				if ($field->name == $value->name) {
 					$field->primariKey = true;
 				}
 			}
 		}
 
 		return $fields; 
+	}
+
+	public function selectTable($tableName,$cubeId)
+	{
+		return $this->findWhere([
+					    'cubeId'=>"$cubeId",
+					    'name'=>"$tableName"
+					])->first()->id;
 	}
 	
 }

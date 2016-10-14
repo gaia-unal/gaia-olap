@@ -13,16 +13,26 @@ class ForeignKey extends Entity
      * @var array
      */
     protected $fillable = [
-        'id', 'fieldId', 'tableId', 'nameRelationship'
-    ]
+        'id', 'idLocalFiel', 'idLocalTable', 'idReferenceTable','idReferenceFiel','nameLocalTable','nameLocalField','nameReferenceTable','nameReferenceField','nameRelationship'
+    ];
 
-	public function field()
+
+	public function fieldLocal()
      {
-     	return $this->belongsTo(Field::getClass(), 'fieldId');
+     	return $this->belongsTo(Field::getClass(), 'idLocalFiel');
+     }
+    public function fieldReference()
+     {
+        return $this->belongsTo(Field::getClass(), 'idReferenceFiel');
      }
     
-    public function table()
+    public function tableLocal()
      {
-        return $this->belongsTo(Field::getClass(), 'tableId');
+        return $this->belongsTo(Field::getClass(), 'idLocalTable');
+     }
+     
+    public function tableReference()
+     {
+        return $this->belongsTo(Field::getClass(), 'idReferenceTable');
      }
 }

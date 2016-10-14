@@ -26,8 +26,13 @@ class Table extends Entity
         return $this->hasMany(Field::getClass(), 'tableId');
     }
 
-    public function foraignKey()
+    public function localForaignKeys()
     {
-        return $this->hasOne(ForeignKey::getClass(), 'tableId');
+        return $this->hasMany(ForeignKey::getClass(), 'idLocalTable');
+    }
+
+    public function referenceForaignKeys()
+    {
+        return $this->hasMany(ForeignKey::getClass(), 'idReferenceTable');
     }
 }

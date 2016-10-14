@@ -15,12 +15,12 @@ class ConnectionTableSeeder extends Seeder
     {
         Connection::create([
     		'userId' 	=> 1,
-    		'name'		=> 'idea',
+    		'name'		=> 'idea Local',
             'motor'     => 'pgsql',
-    		'host'		=> 'froac.manizales.unal.edu.co',
+    		'host'		=> 'localhost',
     		'port'		=> 5432,
     		'userName'	=> 'postgres',
-    		'password'	=> encrypt('%froac$'),
+    		'password'	=> encrypt('administrador'),
     		'database'	=> 'bodegaVariablesAmbientales-13-11-15'
     	]);
 
