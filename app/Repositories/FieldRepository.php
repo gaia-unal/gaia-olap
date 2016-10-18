@@ -34,6 +34,12 @@ class FieldRepository extends BaseRepository
 					    'name'=>"$fieldName"
 					])->first()->id;
 	}
+	public function getFieldsTable($tableId)
+	{
+		return $this->findWhere([
+				'tableId'=>"$tableId"
+			])->lists('name', 'id');
 
+	}
 
 }

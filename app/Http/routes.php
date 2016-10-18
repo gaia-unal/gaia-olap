@@ -89,6 +89,16 @@ Route::group(['middleware' => 'auth'], function(){
 				'as'	=> 'Creator.processComplete.validateField'
 			]);
 		});
+
+
+		Route::group(['prefix' => 'Dashboard'], function(){
+
+			Route::get('/{cubeId}',[
+				'uses' 	=> 'DashboardController@index',
+				'as'	=> 'Creator.Dashboard.index'
+			]);
+
+		});
 	});
 
 });

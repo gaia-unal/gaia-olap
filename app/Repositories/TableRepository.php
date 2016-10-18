@@ -120,5 +120,25 @@ class TableRepository extends BaseRepository
 					    'name'=>"$tableName"
 					])->first()->id;
 	}
-	
+	public function getTableCentral($cubeId)
+	{
+		return $this->with(['fields'])
+					->deletlevel(
+						$this->findWhere([
+					    		'cubeId'=>"$cubeId",
+					    		'principal'=>true
+							])
+					);
+	}
+	public function getTableDimension($cubeId)
+	{
+		return $this->findWhere([
+					    'cubeId'=>"$cubeId",
+					    'principal'=>false
+					]);
+	}
+	public function getFields($tableId)
+	{
+		return $this->with(['fields'])->find($tableId);
+	}	
 }

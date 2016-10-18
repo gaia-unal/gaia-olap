@@ -38,4 +38,11 @@ class RelationRepository extends BaseRepository
 		return $foreignKey;
 	}
 
+	public function getForeignKey($tableId)
+	{
+		return $this->findWhere([
+				'idLocalTable'=>"$tableId"
+			])->lists('nameReferenceTable','idLocalFiel');
+	}
+
 }
