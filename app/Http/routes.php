@@ -98,6 +98,11 @@ Route::group(['middleware' => 'auth'], function(){
 				'as'	=> 'Creator.Dashboard.index'
 			]);
 
+			Route::post('/getDimensionFields',[
+				'uses' 	=> 'DashboardController@getDimensionFields',
+				'as'	=> 'Creator.Dashboard.getDimensionFields'
+			]);
+
 		});
 	});
 

@@ -44,4 +44,10 @@ class DashboardController extends Controller
     	return view('Creator.dashboard.index')	->with('fieldsNoForeign',$fieldsNoForeign)
     											->with('fieldsForeign',$fieldsForeign);
     }
+
+    public function getDimensionFields(Request $request)
+    {
+    	$tableId = $request->all();
+    	return $this->fieldRepository->getFieldsTable($tableId);
+    }
 }
