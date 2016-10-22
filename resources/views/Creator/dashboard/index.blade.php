@@ -53,7 +53,7 @@
 	border-radius: 5px;
 
 }
-.option-locale{
+.option-locale, .dimention-locale{
 	height: 20px;
     width: 100px;
     margin: 0 auto;
@@ -230,8 +230,33 @@
             connectWith: ".connectedSortable-dimension",
             cursor: "move",
             update: function(){ 
-				var ordenElements = $(this).sortable("toArray").toString();
-			    xinsertElements(ordenElements);
+
+					var ordenElements = $(this).sortable("toArray");
+					var selectActual = document.querySelectorAll('.dimention-selected select');
+					var cantidadEnY = ordenElements.length;
+					var cantidadSelected = xlengthSelected();
+
+					if (cantidadSelected > 0) {
+						var ids = xidsEnSelected(cantidadSelected);
+						if (cantidadEnY > cantidadSelected) {
+
+							var nuevo = xgetNuevo(ids,ordenElements);
+							if (nuevo) {
+								xinsertElements(nuevo);
+							}
+
+						}else if (cantidadEnY < cantidadSelected) {
+
+							var eliminado = xgetEliminado(ids,ordenElements);
+							var elementoEliminar = $("div[name="+eliminado+"]").remove();
+						}else{
+							/* Cambiar el orden de los divs*/
+						}
+					}else{
+						xinsertElements(ordenElements);
+						
+					}
+
 			   }
         });
 
@@ -256,7 +281,29 @@
 
 	 		return false;
 	 	}
+
+	 	function xgetNuevo(ids,ordenElement) {
+	 		
+	 		for (var i = 0; i < ordenElement.length; i++) {
+	 			if (ids.indexOf(ordenElement[i]) == -1) {
+	 				return ordenElement[i];
+	 			}
+	 		}
+
+	 		return false;
+	 	}
 	 	function getEliminado(ids,ordenElement) {
+	 		
+	 		for (var i = 0; i < ids.length; i++) {
+	 			if (ordenElement.indexOf(ids[i]) == -1) {
+	 				return ids[i];
+	 			}
+	 		}
+
+	 		return false;
+	 	}
+
+	 	function xgetEliminado(ids,ordenElement) {
 	 		
 	 		for (var i = 0; i < ids.length; i++) {
 	 			if (ordenElement.indexOf(ids[i]) == -1) {
@@ -275,8 +322,19 @@
  			}
  			return miArray;
  		}
+
+ 		function xidsEnSelected(tamanho) {
+ 			var x = document.querySelectorAll('.dimention-selected select');
+ 			var miArray = new Array();
+ 			for (var i = 0; i < tamanho; i++) {
+ 				miArray[i] = x[i].id;
+ 			}
+ 			return miArray;
+ 		}
+
  		function insertElements(elements) {
  			return $( ".operation-option" ).append(elementInsert(elements));
+
  		}
 
  		function elementInsert(idElement) {
@@ -291,27 +349,47 @@
         	return document.querySelectorAll('.option-locale select').length;
         }
 
- 		function xinsertElements(elements) {
- 			return $( ".operation-dimension" ).append(xelementInsert(elements));
+        function xlengthSelected() {
+        	return document.querySelectorAll('.dimention-selected select').length;
+        }
 
+ 		function xinsertElements(elements) {
+ 			$( ".operation-dimension" ).append(xelementInsert(elements));
+ 			
+ 			return true;
  		}
+
 
         function xelementInsert(idElement){
  			var name = document.getElementById(idElement).getAttribute("name");
  			var id = idElement;
+ 			var options =  getDimensionFields(id);
+			var elementSelect = "<div class='dimention-selected' name='"+id+"'><div class='dimention-locale'><label><h5>"+name+"</h5></label><select class='select' id='"+id+"' name='"+id+"'></select></div></div>" ;
 
-			var elementSelect = "<div class='dimention-selected' name='"+id+"'><div class='option-locale'><label><h5>"+name+"</h5></label><select class='select' id='"+id+"'> </select></div></div>";
-
-			return getDimensionFields(id);	
+			return elementSelect;	
         }
 
-        function getDimensionFields(dimension) {
-        	
-		    var token, url, data;
-		    token = $('input[name=_token]').val();
-		    url = '{{route('Creator.Dashboard.getDimensionFields')}}';
-		    data = {dimention: dimention};
+        function getDimensionFields(id) {      	
+			var options = '';
+		    $.ajax({
+			    url: '/Creator/Dashboard/getDimensionFields/'+id,
+			    type: 'get',
+			    dataType: 'JSON',
+			    success: function (data) {
+			    	$.each(data, function(index, val) {
+					    options += '<option value="'+ index +'">'+val+'</option>';
+					});
+					var elementos = document.querySelectorAll('.dimention-selected select');
 
+					$.each(elementos, function(index, val) {
+						 if (id == val.id) {
+						 	$(this).append(options);
+						 }
+					});
+			    }
+			});
+
+			return options;
         }
  	</script>
 @endsection

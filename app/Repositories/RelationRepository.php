@@ -44,5 +44,11 @@ class RelationRepository extends BaseRepository
 				'idLocalTable'=>"$tableId"
 			])->lists('nameReferenceTable','idLocalFiel');
 	}
+	public function getTableField($id)
+	{
+		return $this->deletlevel($this->findWhere([
+				'idLocalFiel'=>"$id"
+			]));
+	}
 
 }

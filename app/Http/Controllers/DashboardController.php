@@ -9,6 +9,7 @@ use App\Repositories\CubeRepository;
 use App\Repositories\TableRepository;
 use App\Repositories\FieldRepository;
 use App\Repositories\RelationRepository;
+use App\Entities\Field;
 
 
 class DashboardController extends Controller
@@ -45,9 +46,13 @@ class DashboardController extends Controller
     											->with('fieldsForeign',$fieldsForeign);
     }
 
-    public function getDimensionFields(Request $request)
+    public function getDimensionFields($id)
     {
-    	$tableId = $request->all();
-    	return $this->fieldRepository->getFieldsTable($tableId);
+    	//$val = $request->all();
+    	//$id = $val['id'];
+    	$table = $this->relationRepository->getTableField($id)->idReferenceTable;
+    	$values = $this->fieldRepository->getFieldsTable($table)->toArray();
+
+    	return Response()->json($values,200);
     }
 }

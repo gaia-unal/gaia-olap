@@ -98,7 +98,7 @@ Route::group(['middleware' => 'auth'], function(){
 				'as'	=> 'Creator.Dashboard.index'
 			]);
 
-			Route::post('/getDimensionFields',[
+			Route::get('/getDimensionFields/{id}',[
 				'uses' 	=> 'DashboardController@getDimensionFields',
 				'as'	=> 'Creator.Dashboard.getDimensionFields'
 			]);
