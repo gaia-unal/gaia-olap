@@ -103,6 +103,10 @@ Route::group(['middleware' => 'auth'], function(){
 				'as'	=> 'Creator.Dashboard.getDimensionFields'
 			]);
 
+			Route::post('/informationConsultCube',[
+				'uses' 	=> 'DashboardController@informationConsultCube',
+				'as'	=> 'Creator.Dashboard.informationConsultCube'
+			]);
 		});
 	});
 

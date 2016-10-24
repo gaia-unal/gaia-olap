@@ -84,6 +84,7 @@
 </style>
 <div class="col-lg-12 container-fluid">
 	<div class="row">
+	
 		<div class="panel panel-default col-lg-2">
 			<div class="page-header">
 				<h5 class="">Opciones Operación</h5>
@@ -120,7 +121,8 @@
 						<nav class="navbar navbar-default">
 						  <div class="container-fluid">
 						    <div class="navbar-header">
-								<div class="y-central connectedSortable-central" id="y-central">
+						    	
+								<div type="input" class="y-central connectedSortable-central" id="y-central" name="y-central">
 									
 								</div>
 						    </div>
@@ -136,7 +138,7 @@
 						<nav class="navbar navbar-default">
 						  <div class="container-fluid">
 						    <div class="navbar-header">
-								<div class="x-dimension connectedSortable-dimension" id="x-dimension">
+								<div class="x-dimension connectedSortable-dimension" id="x-dimension" name="x-dimension">
 									
 								</div>
 						    </div>
@@ -146,6 +148,11 @@
 				</div>
 			</div>
 			<br />
+
+			<div class="col-lg-12">
+				<button class="btn btn-success btn-block" type="button" id="generate-cube">Generar CUBO</button>
+			</div>
+
 			<div class="grafic col-lg-12" id="grafic">
 
 				 <!-- Load Grafic-->
@@ -155,12 +162,17 @@
 			<br>
 		</div>
 		<div class="panel panel-default col-lg-2">
-		{!! Form::open(['id'=>'form-global']) !!}	
+			{!! Form::open(['id'=>'form-global']) !!}
+			<input type="hidden" name="operation-option" value="">
+			<input type="hidden" name="operation-dimension" value="">
+			<input type="hidden" name="cubeId" value="{{$cubeId}}">
+
 			<div class="page-header">
 				<h5 class="">Operaciones Sumarias</h5>
 			</div>
 			<div class="operation-option" id="operation-option">
 				<!-- Load Operation Sumary-->
+				
 
 			</div>
 			<div class="page-header">
@@ -168,9 +180,11 @@
 			</div>
 			<div class="operation-dimension" id="operation-dimension">
 				<!-- Load Operation Dimension-->
+				
 			</div>
-		{!! Form::close() !!}
+			{!! Form::close() !!}
 		</div>
+		
 	</div>
 </div>
 
@@ -182,6 +196,12 @@
 	</script>
 
 	<script>
+	    $("#operation-option").sortable({
+            cursor: "move"
+        });
+        $("#operation-dimension").sortable({
+            cursor: "move"
+        });
         $("#option-central").sortable({
             connectWith: ".connectedSortable-central",
             cursor: "move"
@@ -192,8 +212,8 @@
             cursor: "move"
         });
 
-        var $xcentral = $("#y-central");
-        $xcentral.sortable({
+        var $ycentral = $("#y-central");
+        $ycentral.sortable({
             connectWith: ".connectedSortable-central",
             cursor: "move",
             update: function(){ 
@@ -225,8 +245,8 @@
 			}
         });
        	
-       	var $ydimension = $("#x-dimension");
-        $ydimension.sortable({
+       	var $xdimension = $("#x-dimension");
+        $xdimension.sortable({
             connectWith: ".connectedSortable-dimension",
             cursor: "move",
             update: function(){ 
@@ -259,10 +279,6 @@
 
 			   }
         });
-
-
-
-
 
 
  	</script>
@@ -340,7 +356,7 @@
  		function elementInsert(idElement) {
  			var name = document.getElementById(idElement).getAttribute("name");
  			var id = idElement;
-			var elementSelect = "<div class='select-option' name='"+id+"'><div class='option-locale'><label><h5>"+name+"</h5></label><select class='select' id='"+id+"' > <option value='AVG'>Promedio</option> <option value='MIN'>Mínimo</option> <option value='MAX'>Máximo</option><option value='SUM'>Suma</option></select></div></div>";
+			var elementSelect = "<div class='select-option' name='"+id+"'><div class='option-locale'><label for='"+id+"'><h5>"+name+"</h5></label><select class='select' id='"+id+"' name='"+id+"' > <option value='AVG'>Promedio</option> <option value='MIN'>Mínimo</option> <option value='MAX'>Máximo</option><option value='SUM'>Suma</option></select></div></div>";
 
 			return elementSelect;
  		}
@@ -364,7 +380,7 @@
  			var name = document.getElementById(idElement).getAttribute("name");
  			var id = idElement;
  			var options =  getDimensionFields(id);
-			var elementSelect = "<div class='dimention-selected' name='"+id+"'><div class='dimention-locale'><label><h5>"+name+"</h5></label><select class='select' id='"+id+"' name='"+id+"'></select></div></div>" ;
+			var elementSelect = "<div class='dimention-selected' name='"+id+"'><div class='dimention-locale'><label for='"+id+"'><h5>"+name+"</h5></label><select class='select' id='"+id+"' name='"+id+"'></select></div></div>" ;
 
 			return elementSelect;	
         }
@@ -391,6 +407,42 @@
 
 			return options;
         }
+ 	</script>
+
+
+ 	<script type="text/javascript">
+ 		$(function(){
+			 $("#generate-cube").click(function(){
+
+			 $("input[name='operation-option']").val(optenerValY());
+			 $("input[name='operation-dimension']").val(optenerValX());
+			 var url = "/Creator/Dashboard/informationConsultCube";
+
+
+			    $.ajax({
+			           type: "POST",
+			           url: url,
+			           data: $("#form-global").serialize(), // Adjuntar los campos del formulario enviado.
+			           success: function(data)
+			           {
+			           		console.log(data);
+			              //$("#respuesta").html(data); // Mostrar la respuestas del script PHP.
+			           }
+			         });
+
+			    return false; // Evitar ejecutar el submit del formulario.
+			 });
+			});
+
+
+ 		function optenerValY() {
+ 			return $("#y-central").sortable("toArray");
+ 		}
+
+ 		function optenerValX() {
+ 			return $("#x-dimension").sortable("toArray");
+ 		}
+
  	</script>
 @endsection
 
