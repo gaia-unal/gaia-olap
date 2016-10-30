@@ -107,6 +107,21 @@ Route::group(['middleware' => 'auth'], function(){
 				'uses' 	=> 'DashboardController@informationConsultCube',
 				'as'	=> 'Creator.Dashboard.informationConsultCube'
 			]);
+
+			Route::post('/getConsultData',[
+				'uses' 	=> 'DashboardController@getConsultData',
+				'as'	=> 'Creator.Dashboard.getConsultData'
+			]);
+
+			Route::post('/formatData',[
+				'uses' 	=> 'DashboardController@formatData',
+				'as'	=> 'Creator.Dashboard.formatData'
+			]);
+			
+			Route::post('/formatDimX',[
+				'uses' 	=> 'DashboardController@formatDimX',
+				'as'	=> 'Creator.Dashboard.formatDimX'
+			]);
 		});
 	});
 

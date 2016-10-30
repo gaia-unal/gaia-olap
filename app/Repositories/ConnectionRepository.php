@@ -78,5 +78,25 @@ class ConnectionRepository extends BaseRepository
  
 	}
 
+	public function resultConsult($connectionId,$consult)
+	{
+		$connection = $this->find($connectionId);
+		$this->connectionOnTheFly = new ConnectionOnTheFly($connection);
+		$data = $this->connectionOnTheFly->select($consult);
+		
+		$host= $connection->host;
+	    $port= $connection->port;
+	    $user= $connection->userName;
+	    $pass= $connection->password;
+	    $dbname=$connection->database;
+		/*
+	    $connect = pg_connect("host='localhost', port='5432', user='postgres', pass='eyJpdiI6InBjUGhTbllGV1hRQ3ZqSzd0MmZDaEE9PSIsInZhbHVlIjoiZk1iZHZuQWJiaU1TNWFkUmJiZEpwQlVSUDdJeGdXUWJsczh0WTFYS3ZaVT0iLCJtYWMiOiIwN2E3OTFlYWE1ZWYxNzVjZmIzZTEyMzlmODM0MWMxMmZkMjk5ODlhMzFkMWQ2YTkzZTYyYjI5ZGQ5NjQzZDk4In0=', dbname='bodegaVariablesAmbientales-13-11-15'");
+
+	    $consulta = pg_query($connect, $consult);
+	    $data = pg_fetch_array($consulta);*/
+
+		return $data;
+	}
+
 
 }

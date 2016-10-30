@@ -9,6 +9,7 @@ use App\Repositories\CubeRepository;
 use App\Repositories\TableRepository;
 use App\Repositories\FieldRepository;
 use App\Repositories\RelationRepository;
+use App\Repositories\ConnectionRepository;
 use App\Entities\Field;
 
 
@@ -18,18 +19,21 @@ class DashboardController extends Controller
 	private $tableRepository;
 	private $fieldRepository;
 	private $relationRepository;
+    private $connectionRepository;
 
 	public function __construct(
 		CubeRepository $cubeRepository,
 		TableRepository $tableRepository,
 		FieldRepository $fieldRepository,
-		RelationRepository $relationRepository
+		RelationRepository $relationRepository,
+        ConnectionRepository $connectionRepository
 		)
 	{
 		$this->cubeRepository = $cubeRepository;
 		$this->tableRepository = $tableRepository;
 		$this->fieldRepository = $fieldRepository;
 		$this->relationRepository = $relationRepository;
+        $this->connectionRepository = $connectionRepository;
 	}
     public function index($cubeId)
     {
@@ -109,13 +113,14 @@ class DashboardController extends Controller
    							);
 
     	$unirCadena = $this->unirCadena($cadenaSelect,$cadenaFromWhere);
+        $resultado = array('colums' => $cadenaSelect['colums'], 'consult' => $unirCadena );
 
-    	return $unirCadena;
+    	return $resultado;
     }
 
     private function unirCadena($cadenaSelect,$cadenaFromWhere)
     {
-    	return $cadenaSelect['select']." ".$cadenaFromWhere." ".$cadenaSelect['groubBy']." ".$cadenaSelect['orderBy'].";";
+    	return $cadenaSelect['select']." ".$cadenaFromWhere." ".$cadenaSelect['groubBy']." ".$cadenaSelect['orderBy']."";// limit 100
     }
 
     private function generateFromPart($operation_option,$operation_dimention,$tableName)
@@ -169,6 +174,7 @@ class DashboardController extends Controller
     	$select = "SELECT ";
     	$groubBy = " Group by ";
     	$orderBy = " Order by";
+        $colums = array();
 
     	foreach ($operation_dimention as $key => $value) {
 
@@ -176,7 +182,8 @@ class DashboardController extends Controller
     		$field = $this->fieldRepository->find($value);
     		$dim_name = $fieldRelation->nameReferenceTable;
     		$field_name = $field->name;
-    		$select .= $dim_name.".".$field_name." As DIM".$field_name.", ";
+    		$select .= $dim_name.".".$field_name." As dim".$field_name.", ";
+            array_push($colums,'dim'.$field_name);
     		$groubBy .= " ".$dim_name.".".$field_name.",";
     		$orderBy .= " ".$dim_name.".".$field_name.",";
     	}
@@ -186,6 +193,7 @@ class DashboardController extends Controller
     		$field = $this->fieldRepository->find($key);
     		$fieldName = $field->name;
     		$select .= " ".$value."(".$tableName.".".$fieldName.") as ".$value.$fieldName.",";
+            array_push($colums, ''.$value.$fieldName);
     	}
 
     	$select = substr($select, 0, -1);
@@ -197,6 +205,7 @@ class DashboardController extends Controller
     	return array(	'select' => $select,
     					'groubBy' => $groubBy,
     					'orderBy' => $orderBy,
+                        'colums'   => $colums
     				);
     }
 
@@ -222,6 +231,73 @@ class DashboardController extends Controller
     		}
     	}
     	return $tem;
+    }
+
+    public function getConsultData(Request $request)
+    {
+        $data = $request->all();
+        $cubeId = $data['cubeId'];
+        $consult = $data['consult'];
+        $connectionId = $this->cubeRepository->getConnection($cubeId);
+        $data = $this->connectionRepository->resultConsult($connectionId,$consult);
+        return Response()->json($data ,200);
+    }
+
+    private function convertObject($data)
+    {
+        $dataTem = array();
+
+        for ($i=0; $i < count($data); $i++) { 
+            array_push($dataTem,get_object_vars($data[$i])); 
+        }
+        return $dataTem;
+    }
+
+    public function formatData(Request $request)
+    {
+        $requestAll = $request->all();
+        $colums = $requestAll['colums'];
+        $dataTem = $requestAll['data'];     
+        
+        //$dataTem = $this->convertObject($data);
+        $matriz = array();
+        $colums = explode(',',$colums);
+        $matrizX  = array();
+        $matrizY  = array();
+
+        foreach ($colums as $key => $value) {
+            $tem = array_column($dataTem,$value);
+            if (substr($value, 0, 3) == 'dim') {
+                $matrizX[$value] = $tem;
+            }else{
+                $matrizY[$value] = $tem;
+            }
+  
+        }
+        $matriz['matrizX'] = $matrizX;
+        $matriz['matrizY'] = $matrizY; 
+
+        return Response()->json($matriz,200);
+    }
+
+    public function formatDimX(Request $request)
+    {
+        $dataAll = $request->all();
+        $colums = $requestAll['colums'];
+        $dataTem = $requestAll['data'];
+        $dataX = $dataTem['matrizX'];
+        $dataY = $dataTem['matrizY'];
+
+        /* hay que eliminar los valores null en las dimenciones  ¿ que hacer con los null en operaciones? */
+
+        /* 
+            aqui hay que unir los valores de las dimenciones en cadenas de texto mezcladas.
+        */
+
+        $matriz = array();
+        $colums = explode(',',$colums);
+        return Response()->json('entre',200);
+
     }
 
 

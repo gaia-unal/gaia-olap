@@ -166,6 +166,9 @@
 			<input type="hidden" name="operation-option" value="">
 			<input type="hidden" name="operation-dimension" value="">
 			<input type="hidden" name="cubeId" value="{{$cubeId}}">
+			<input type="hidden" name="consult" value="">
+			<input type="hidden" name="colums" value="">
+			<input type="hidden" name="dataEnBruto" value="">
 
 			<div class="page-header">
 				<h5 class="">Operaciones Sumarias</h5>
@@ -356,7 +359,7 @@
  		function elementInsert(idElement) {
  			var name = document.getElementById(idElement).getAttribute("name");
  			var id = idElement;
-			var elementSelect = "<div class='select-option' name='"+id+"'><div class='option-locale'><label for='"+id+"'><h5>"+name+"</h5></label><select class='select' id='"+id+"' name='"+id+"' > <option value='AVG'>Promedio</option> <option value='MIN'>Mínimo</option> <option value='MAX'>Máximo</option><option value='SUM'>Suma</option></select></div></div>";
+			var elementSelect = "<div class='select-option' name='"+id+"'><div class='option-locale'><label for='"+id+"'><h5>"+name+"</h5></label><select class='select' id='"+id+"' name='"+id+"' > <option value='avg'>Promedio</option> <option value='min'>Mínimo</option> <option value='max'>Máximo</option><option value='sum'>Suma</option></select></div></div>";
 
 			return elementSelect;
  		}
@@ -412,28 +415,56 @@
 
  	<script type="text/javascript">
  		$(function(){
-			 $("#generate-cube").click(function(){
-
-			 $("input[name='operation-option']").val(optenerValY());
-			 $("input[name='operation-dimension']").val(optenerValX());
-			 var url = "/Creator/Dashboard/informationConsultCube";
-
-
-			    $.ajax({
-			           type: "POST",
-			           url: url,
-			           data: $("#form-global").serialize(), // Adjuntar los campos del formulario enviado.
-			           success: function(data)
-			           {
-			           		console.log(data);
-			              //$("#respuesta").html(data); // Mostrar la respuestas del script PHP.
-			           }
-			         });
-
-			    return false; // Evitar ejecutar el submit del formulario.
+			$("#generate-cube").click(function(){
+				extractSelect();
 			 });
-			});
+		});
 
+ 		function extractSelect() {
+
+			$("input[name='operation-option']").val(optenerValY());
+			$("input[name='operation-dimension']").val(optenerValX());
+			var url = "/Creator/Dashboard/informationConsultCube";
+			var data= $("#form-global").serialize()
+
+			$.post( url, data, function( data ) {
+				console.log(data);
+				extractSelectData(data);
+			});
+ 		}
+ 		function extractSelectData(data) {
+
+			$("input[name='consult']").val(data['consult']);
+			$("input[name='colums']").val(data['colums']);
+			var url = "/Creator/Dashboard/getConsultData";
+			var data = $("#form-global").serialize();
+
+			$.post( url, data, function( data ) {
+				console.log(data);
+				formatData(data);
+			});
+ 		}
+
+ 		function formatData(data) {
+ 			
+ 			$("input[name='dataEnBruto']").val(data);
+			var data = {colums: $("input[name='colums']").val(),data:data};
+			var url = "/Creator/Dashboard/formatData";
+			$.post( url, data, function( data ) {
+				console.log(data);
+				formatDimX(data);
+			});
+ 		}
+
+ 		function formatDimX(data) {
+ 			
+ 			$("input[name='dataEnBruto']").val(data);
+			var data = {colums: $("input[name='colums']").val(),data:data};
+			var url = "/Creator/Dashboard/formatData";
+			$.post( url, data, function( data ) {
+				console.log(data);
+			});
+ 		}
 
  		function optenerValY() {
  			return $("#y-central").sortable("toArray");

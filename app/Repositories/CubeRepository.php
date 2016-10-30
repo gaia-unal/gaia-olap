@@ -38,4 +38,9 @@ class CubeRepository extends BaseRepository
 		return $cube;
 	}
 
+	public function getConnection($cubeId)
+	{
+		return $this->find($cubeId)->connectionId;
+	}
+
 }
