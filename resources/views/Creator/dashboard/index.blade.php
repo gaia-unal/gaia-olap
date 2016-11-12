@@ -153,9 +153,25 @@
 				<button class="btn btn-success btn-block" type="button" id="generate-cube">Generar CUBO</button>
 			</div>
 
-			<div class="grafic col-lg-12" id="grafic">
+			<div class="grafic col-lg-12" id="grafic" style="height: 400px; min-width: 310px" >
+			<br />
+				<div class="box box-success">
+		            <div class="box-header with-border">
+		              <i class="fa fa-bar-chart-o"></i>
 
-				 <!-- Load Grafic-->
+		              <h3 class="box-title">Line Chart</h3>
+
+		              <div class="box-tools pull-right">
+		                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+		                </button>
+		                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+		              </div>
+		            </div>
+		            <div class="box-body">
+		              <div id="line-chart" style="height: 300px;"></div>
+		            </div>
+		            <!-- /.box-body-->
+		          </div>
 
 			</div>
 			<br>
@@ -419,6 +435,13 @@
 				extractSelect();
 			 });
 		});
+		function optenerValY() {
+ 			return $("#y-central").sortable("toArray");
+ 		}
+
+ 		function optenerValX() {
+ 			return $("#x-dimension").sortable("toArray");
+ 		}
 
  		function extractSelect() {
 
@@ -460,21 +483,99 @@
  			
  			$("input[name='dataEnBruto']").val(data);
 			var data = {colums: $("input[name='colums']").val(),data:data};
-			var url = "/Creator/Dashboard/formatData";
+			var url = "/Creator/Dashboard/formatDimX";
 			$.post( url, data, function( data ) {
 				console.log(data);
+				generateGraficFlot(data['dataX'],data['dataY']);
+				//generateGrafic(data);
 			});
  		}
+</script>
 
- 		function optenerValY() {
- 			return $("#y-central").sortable("toArray");
- 		}
+<script>
+  function generateGraficFlot(dataX,dataY) {
 
- 		function optenerValX() {
- 			return $("#x-dimension").sortable("toArray");
- 		}
 
- 	</script>
+
+   /*
+     * LINE CHART
+     * ----------
+     */
+    //LINE randomly generated data
+
+    var sin = [], cos = [];
+    for (var i = 0; i < 3; i += 0.5) {
+      sin.push([i, Math.sin(i)]);
+      cos.push([i, Math.cos(i)]);
+    }
+    $.each(dataY, function(index, val) {
+		sin = val;
+	});
+    var line_data1 = {
+      data: sin,
+      color: "#3c8dbc"
+    };
+    var line_data2 = {
+      data: cos,
+      color: "#00c0ef"
+    };
+
+   	console.log(dataY['avgprecipitacion'])
+  	console.log( line_data1)
+  	console.log( line_data2)
+
+    $.plot("#line-chart", [line_data1, line_data2], {
+      grid: {
+        hoverable: true,
+        borderColor: "#f3f3f3",
+        borderWidth: 1,
+        tickColor: "#f3f3f3"
+      },
+      series: {
+        shadowSize: 0,
+        lines: {
+          show: true
+        },
+        points: {
+          show: true
+        }
+      },
+      lines: {
+        fill: false,
+        color: ["#3c8dbc", "#f56954"]
+      },
+      yaxis: {
+      	show: true,
+      },
+      xaxis: {
+      	ticks: dataX,
+        show: true
+      }
+    });
+    //Initialize tooltip on hover
+    $('<div class="tooltip-inner" id="line-chart-tooltip"></div>').css({
+      position: "absolute",
+      display: "none",
+      opacity: 0.8
+    }).appendTo("body");
+    $("#line-chart").bind("plothover", function (event, pos, item) {
+
+      if (item) {
+        var x = item.datapoint[0].toFixed(2),
+            y = item.datapoint[1].toFixed(2);
+
+        $("#line-chart-tooltip").html(item.series.label + " of " + x + " = " + y)
+            .css({top: item.pageY + 5, left: item.pageX + 5})
+            .fadeIn(200);
+      } else {
+        $("#line-chart-tooltip").hide();
+      }
+
+    });
+    /* END LINE CHART */
+  };
+
+</script>
 @endsection
 
 

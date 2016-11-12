@@ -260,10 +260,8 @@ class DashboardController extends Controller
         $dataTem = $requestAll['data'];     
         
         //$dataTem = $this->convertObject($data);
-        $matriz = array();
         $colums = explode(',',$colums);
-        $matrizX  = array();
-        $matrizY  = array();
+
 
         foreach ($colums as $key => $value) {
             $tem = array_column($dataTem,$value);
@@ -275,7 +273,7 @@ class DashboardController extends Controller
   
         }
         $matriz['matrizX'] = $matrizX;
-        $matriz['matrizY'] = $matrizY; 
+        $matriz['matrizY'] = $matrizY;
 
         return Response()->json($matriz,200);
     }
@@ -283,20 +281,38 @@ class DashboardController extends Controller
     public function formatDimX(Request $request)
     {
         $dataAll = $request->all();
-        $colums = $requestAll['colums'];
-        $dataTem = $requestAll['data'];
+        $colums = $dataAll['colums'];
+        $dataTem = $dataAll['data'];
+
         $dataX = $dataTem['matrizX'];
         $dataY = $dataTem['matrizY'];
-
-        /* hay que eliminar los valores null en las dimenciones  ¿ que hacer con los null en operaciones? */
-
-        /* 
-            aqui hay que unir los valores de las dimenciones en cadenas de texto mezcladas.
-        */
-
-        $matriz = array();
         $colums = explode(',',$colums);
-        return Response()->json('entre',200);
+        $datatem = array();
+
+        /* Hay que colocar undefined los valores null en las dimenciones  ¿ que hacer con los null en operaciones? */
+        /* Aqui hay que unir los valores de las dimenciones en cadenas de texto mezcladas.*/
+
+        $cant = count($dataX[$colums[0]]);
+        for ($i=0; $i < $cant ; $i++) { 
+            $cadenaTem = '';
+            foreach ($colums as $key => $value) {
+                
+                if (substr($value, 0, 3) == 'dim') {
+
+                    if ($dataX[$value][$i] == '') {
+                        $cadenaTem .= "  undefined / ";
+                    }else{
+                        $cadenaTem .= " ".$dataX[$value][$i]." / ";
+                    }  
+                }
+            }
+            
+            array_push($datatem, array($i , substr($cadenaTem, 0, -2)));
+            
+        }
+        $data['dataY'] = $dataY;
+        $data['dataX'] = $datatem;
+        return Response()->json($data,200);
 
     }
 
