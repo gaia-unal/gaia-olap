@@ -310,10 +310,23 @@ class DashboardController extends Controller
             array_push($datatem, array($i , substr($cadenaTem, 0, -2)));
             
         }
-        $data['dataY'] = $dataY;
+        $data['dataY'] = $this->formatDimY($dataY);
         $data['dataX'] = $datatem;
         return Response()->json($data,200);
 
+    }
+
+    public function formatDimY($data)
+    {
+        $all = array();
+        foreach ($data as $key => $value) {
+            $ArrayTem = array();
+            for ($i=0; $i < count($value); $i++) { 
+                array_push($ArrayTem,array($i,$value[$i]));
+            }
+            $all[$key] = $ArrayTem;
+        }
+        return $all;
     }
 
 

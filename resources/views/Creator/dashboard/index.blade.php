@@ -494,37 +494,24 @@
 
 <script>
   function generateGraficFlot(dataX,dataY) {
-
-
-
    /*
      * LINE CHART
      * ----------
      */
     //LINE randomly generated data
-
-    var sin = [], cos = [];
-    for (var i = 0; i < 3; i += 0.5) {
-      sin.push([i, Math.sin(i)]);
-      cos.push([i, Math.cos(i)]);
-    }
+    var arrayY = [];
+    var bandera = 0;
     $.each(dataY, function(index, val) {
-		sin = val;
-	});
-    var line_data1 = {
-      data: sin,
-      color: "#3c8dbc"
-    };
-    var line_data2 = {
-      data: cos,
-      color: "#00c0ef"
-    };
+    	arrayY[bandera] = {
+    		label	: index,
+    		yaxis	: bandera+1,
+    		data 	: val
+    	};
+    	bandera++;
 
-   	console.log(dataY['avgprecipitacion'])
-  	console.log( line_data1)
-  	console.log( line_data2)
+    });
 
-    $.plot("#line-chart", [line_data1, line_data2], {
+    $.plot("#line-chart", arrayY, {
       grid: {
         hoverable: true,
         borderColor: "#f3f3f3",
@@ -564,7 +551,7 @@
         var x = item.datapoint[0].toFixed(2),
             y = item.datapoint[1].toFixed(2);
 
-        $("#line-chart-tooltip").html(item.series.label + " of " + x + " = " + y)
+        $("#line-chart-tooltip").html(item.series.label + " <br /> " + x + " = " + y)
             .css({top: item.pageY + 5, left: item.pageX + 5})
             .fadeIn(200);
       } else {
