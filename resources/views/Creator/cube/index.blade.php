@@ -36,6 +36,9 @@
 										<td>{{ $cube-> description}}</td>
 										<td>
 											<div class="buttonsTable">
+
+												<a href="{{ route('Creator.Dashboard.index', $cube->id) }}" class="btn btn-box-tool" ><i class="glyphicon glyphicon-signal"></i></a>
+
 												<a href="{{ route('Creator.cube.show', $cube->id) }}" class="btn btn-box-tool" ><i class="glyphicon glyphicon-eye-open"></i></a>
 
 												<a href="{{ route('Creator.cube.edit', $cube->id) }}" class="btn btn-box-tool" ><i class="glyphicon glyphicon-pencil"></i></a>

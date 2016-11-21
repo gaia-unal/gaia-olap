@@ -79,7 +79,7 @@ Landing page based on Pratt: http://blacktie.co/demo/pratt/
         <div class="row centered">
             <div class="col-lg-12">
                 <h1>Gaia <b><a href="https://github.com/Daespinosag/gaia-olap">Olap</a></b></h1>
-                <h3> Herramienta para la creacion de analisis multidimencional OLAP</h3>
+                <h3> Herramienta para la creación de análisis multidimencional OLAP</h3>
                 <h3> Crea cubos OLAP desde cero en 4 sencillos pasos </h3>
                 <h3><a href="{{ url('/register') }}" class="btn btn-lg btn-success">{{ trans('adminlte_lang::message.gedstarted') }}</a></h3>
             </div>

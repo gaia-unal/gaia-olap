@@ -159,7 +159,7 @@
 		            <div class="box-header with-border">
 		              <i class="fa fa-bar-chart-o"></i>
 
-		              <h3 class="box-title">Line Chart</h3>
+		              <h3 class="box-title">Gráfico</h3>
 
 		              <div class="box-tools pull-right">
 		                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
