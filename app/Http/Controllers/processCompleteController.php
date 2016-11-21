@@ -274,13 +274,14 @@ class processCompleteController extends Controller
 
     private function storeForeign($table)
     {    
+        //dd($table);
             if ($table->foreignKeys) {
                 foreach ($table->foreignKeys as $key => $value) {
                     
                     $value->idLocalTable = $table->id;
                     $value->idLocalFiel = $this   ->fieldRepository
                                                     ->selectField(
-                                                        $value->column_name_reference,
+                                                        $value->column_name,
                                                         $value->idLocalTable
                                                         );
                     $value->idReferenceTable = $this ->tableRepository
@@ -298,6 +299,7 @@ class processCompleteController extends Controller
                     $value->nameLocalField = $value->column_name;
                     $value->nameReferenceTable = $value->table_name_reference;
                     $value->nameReferenceField = $value->column_name_reference;
+
 
                     $newValue = $this->relationRepository->create(get_object_vars($value));
                 }

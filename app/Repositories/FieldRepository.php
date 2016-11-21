@@ -29,6 +29,7 @@ class FieldRepository extends BaseRepository
 	}
 	public function selectField($fieldName,$tableId)
 	{
+		//dd($tableId);
 		return $this->findWhere([
 					    'tableId'=>"$tableId",
 					    'name'=>"$fieldName"

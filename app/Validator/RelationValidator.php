@@ -12,11 +12,11 @@ class RelationValidator extends LaravelValidator {
         'idLocalTable' 			=> 'required', 
         'idReferenceTable'		=> 'required',
         'idReferenceFiel'		=> 'required',
-        'nameLocalTable'		=> 'min:3',
-        'nameLocalField'		=> 'min:3',
-        'nameReferenceTable'	=> 'min:3',
-        'nameReferenceField'	=> 'min:3',
-        'nameRelationship'		=> 'min:3'
+        'nameLocalTable'		=> 'min:1',
+        'nameLocalField'		=> 'min:1',
+        'nameReferenceTable'	=> 'min:1',
+        'nameReferenceField'	=> 'min:1',
+        'nameRelationship'		=> 'min:1'
    	];
    	
    	protected $messages = [
