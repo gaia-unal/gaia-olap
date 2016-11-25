@@ -44,6 +44,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $connections = $this->connectionRepository
+                            ->with(['cubes'])
+                            ->findWhere(['userId' => currentUser()->id]);
+        return view('home')->with('connections', $connections);
     }
 }

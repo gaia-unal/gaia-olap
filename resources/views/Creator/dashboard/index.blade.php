@@ -375,7 +375,7 @@
  		function elementInsert(idElement) {
  			var name = document.getElementById(idElement).getAttribute("name");
  			var id = idElement;
-			var elementSelect = "<div class='select-option' name='"+id+"'><div class='option-locale'><label for='"+id+"'><h5>"+name+"</h5></label><select class='select' id='"+id+"' name='"+id+"' > <option value='avg'>Promedio</option> <option value='min'>Mínimo</option> <option value='max'>Máximo</option><option value='sum'>Suma</option></select></div></div>";
+			var elementSelect = "<div class='select-option' name='"+id+"'><div class='option-locale'><label for='"+id+"'><h5>"+name+"</h5></label><select class='select' id='"+id+"' name='"+id+"' > <option value='avg'>Promedio</option> <option value='min'>Mínimo</option> <option value='max'>Máximo</option><option value='sum'>Suma</option><option value='max'>Máximo</option><option value='count'>Contar</option></select></div></div>";
 
 			return elementSelect;
  		}
