@@ -9,21 +9,32 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
-
+use App\Repositories\CubeRepository;
+use App\Repositories\ConnectionRepository;
 /**
  * Class HomeController
  * @package App\Http\Controllers
  */
 class HomeController extends Controller
 {
+    
+    private $cubeRepository;
+    private $connectionRepository;
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct
+    (
+        CubeRepository $cubeRepository,
+        ConnectionRepository $connectionRepository
+    )
     {
         $this->middleware('auth');
+        $this->cubeRepository = $cubeRepository;
+        $this->connectionRepository = $connectionRepository;
     }
 
     /**
@@ -33,7 +44,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-
         return view('home');
     }
 }

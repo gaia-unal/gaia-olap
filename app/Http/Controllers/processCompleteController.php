@@ -235,8 +235,9 @@ class processCompleteController extends Controller
         $cubeId = $this->storeFieldsTable($tablesFields);
 
 
-        return redirect() ->route('Creator.processComplete.validateField',['cubeId' => $cube->id]);
-        
+        //return redirect() ->route('Creator.processComplete.validateField',['cubeId' => $cube->id]);
+        return redirect() ->route('Creator.Dashboard.index',['cubeId' => $cube->id]);
+                
     }
 
 
@@ -299,8 +300,7 @@ class processCompleteController extends Controller
                     $value->nameLocalField = $value->column_name;
                     $value->nameReferenceTable = $value->table_name_reference;
                     $value->nameReferenceField = $value->column_name_reference;
-
-
+                    
                     $newValue = $this->relationRepository->create(get_object_vars($value));
                 }
 
