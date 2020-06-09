@@ -38,7 +38,7 @@ Route::group(['middleware' => 'auth'], function(){
 
 		Route::resource('connection','ConnectionController');
 
-		Route::resource('cube','cubeController');
+		Route::resource('cube','CubeController');
 
 
 		Route::get('/processComplete',[
